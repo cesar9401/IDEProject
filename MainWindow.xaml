@@ -26,9 +26,9 @@
         <Menu x:Name="mainMenu" HorizontalAlignment="Left" Height="30" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
             <MenuItem x:Name="fileItem" Header="File" Height="30" Width="75" FontSize="14" Background="#FF171520" Foreground="White" BorderBrush="#FF171520" HorizontalContentAlignment="Center">
                 <MenuItem x:Name="newFile" Command="New" Header="New File" Height="30" Width="200" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Click="newFile_Click" Cursor="Hand"/>
-                <MenuItem x:Name="openFile" Header="Open File" Height="30" Width="200" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Cursor="Hand" Click="openFile_Click_1"/>
+                <MenuItem x:Name="openFile" Header="Open File" Height="30" Width="200" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Cursor="Hand" Click="openFile_Click"/>
                 <MenuItem x:Name="closeFile" Header="Close File" Height="30" Width="200" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Cursor="Hand"/>
-                <MenuItem x:Name="saveFile" Header="Save" Height="30" Width="200" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Cursor="Hand"/>
+                <MenuItem x:Name="saveFile" Header="Save" Height="30" Width="200" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Cursor="Hand" Click="saveFile_Click"/>
                 <MenuItem x:Name="Exit" Header="Exit" Height="30" Width="200" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Cursor="Hand" Click="Exit_Click"/>
 
             </MenuItem>

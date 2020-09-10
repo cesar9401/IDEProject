@@ -22,6 +22,9 @@ namespace IDEProject
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        private String path;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -39,23 +42,56 @@ namespace IDEProject
 
         private void openFile_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                OpenFileDialog open = new OpenFileDialog();
+                open.Title = "Abrir";
+                open.Filter = "css files (*.css)|*.css";
+                open.ShowDialog();
 
+                if (File.Exists(open.FileName))
+                {
+                    path = open.FileName;
+                    TextReader read = new StreamReader(path);
+                    consoleText.Document.Blocks.Clear();
+                    consoleText.Document.Blocks.Add(new Paragraph(new Run(read.ReadToEnd())));
+                    read.Close();
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error al abrir");
+            }
         }
 
-        private void openFile_Click_1(object sender, RoutedEventArgs e)
+        private void saveFile_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog open = new OpenFileDialog();
-            open.Title = "Abrir";
-            open.ShowDialog();
-
-            if (File.Exists(open.FileName))
+            try
             {
-                String path = open.FileName;
-                TextReader read = new StreamReader(path);
-                consoleText.Document.Blocks.Clear();
-                consoleText.Document.Blocks.Add(new Paragraph(new Run(read.ReadToEnd())));
-                read.Close();
+                //SaveFileDialog save = new SaveFileDialog();
+                if (path != null)
+                {
+                    if (path.Length != 0)
+                    {
+                        StreamWriter save = File.CreateText(path);
+                        String text = StringFromRichTextBox(consoleText);
+                        save.Write(text);
+                        save.Flush();
+                        save.Close();
+                    }
+                }
+
             }
+            catch (Exception)
+            {
+                MessageBox.Show("No se ha podido guardar el archivo");
+            }
+        }
+
+        string StringFromRichTextBox(RichTextBox rtb)
+        {
+            TextRange textRange = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd);
+            return textRange.Text;
         }
     }
 }
