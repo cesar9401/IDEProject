@@ -80,7 +80,6 @@ namespace IDEProject
                         save.Close();
                     }
                 }
-
             }
             catch (Exception)
             {
@@ -88,10 +87,52 @@ namespace IDEProject
             }
         }
 
+        private void paintText()
+        {
+            TextRange range = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
+            String words = range.Text;
+            if(words.Contains(";"))
+            {
+                int i = words.LastIndexOf(";");
+                String aux = words;
+                String newString = aux.Remove(i, words.Length - i);
+                consoleText.Document.Blocks.Clear();
+                TextRange rangeOfText1 = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
+                rangeOfText1.Text = newString;
+                paint(";");
+            }
+  
+            //var startPointer = consoleText.Document.ContentStart.GetPositionAtOffset(0);
+            //var endPointer = consoleText.Document.ContentEnd.GetPositionAtOffset(-10);
+            //consoleText.Selection.Select(startPointer, endPointer);
+        }
+
+        private void paint(string texto)
+        {
+            TextRange rangeOfText1 = new TextRange(consoleText.Document.ContentEnd, consoleText.Document.ContentEnd);
+            rangeOfText1.Text = texto;
+            rangeOfText1.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkOrange);
+        }
+
         string StringFromRichTextBox(RichTextBox rtb)
         {
             TextRange textRange = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd);
             return textRange.Text;
+        }
+
+        private void cambiosTexto(object sender, TextChangedEventArgs e)
+        {
+            //paint();
+        }
+
+        private void selection(object sender, MouseEventArgs e)
+        {
+            paintText();
+        }
+
+        private void keyUp(object sender, KeyEventArgs e)
+        {
+            paintText();
         }
     }
 }

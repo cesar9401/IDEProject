@@ -39,7 +39,7 @@
             </MenuItem>
 
         </Menu>
-        <RichTextBox x:Name="consoleText" Grid.Column="2" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Background="#FF2A2139" Foreground="#FFFDFEFE" SelectionBrush="#7FFDFEFE" Padding="10,15,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="15" FontFamily="Consolas" AcceptsTab="True" Block.LineStackingStrategy="BlockLineHeight" Block.LineHeight="15"/>
+        <RichTextBox x:Name="consoleText" Grid.Column="2" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Background="#FF2A2139" Foreground="#FFFDFEFE" SelectionBrush="#7FFDFEFE" Padding="10,15,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="15" FontFamily="Consolas" AcceptsTab="True" Block.LineStackingStrategy="BlockLineHeight" Block.LineHeight="15" TextChanged="cambiosTexto" GotMouseCapture="selection" KeyUp="keyUp"/>
         <StackPanel x:Name="mainPanel" Grid.Column="1" Grid.RowSpan="5" Grid.Row="1" Width="200" Background="#FF241B2F"/>
     </Grid>
 </Window>
