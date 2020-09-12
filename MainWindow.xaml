@@ -10,9 +10,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="75"></ColumnDefinition>
             <ColumnDefinition Width="200"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
@@ -39,7 +39,11 @@
             </MenuItem>
 
         </Menu>
-        <RichTextBox x:Name="consoleText" Grid.Column="2" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Background="#FF2A2139" Foreground="#FFFDFEFE" SelectionBrush="#7FFDFEFE" Padding="10,15,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="15" FontFamily="Consolas" AcceptsTab="True" Block.LineStackingStrategy="BlockLineHeight" Block.LineHeight="15" TextChanged="cambiosTexto" GotMouseCapture="selection" KeyUp="keyUp"/>
-        <StackPanel x:Name="mainPanel" Grid.Column="1" Grid.RowSpan="5" Grid.Row="1" Width="200" Background="#FF241B2F"/>
+        <RichTextBox x:Name="consoleText" Grid.Column="2" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Background="#FF2A2139" Foreground="#FFFDFEFE" SelectionBrush="#7FFDFEFE" Padding="10,15,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="15" FontFamily="Consolas" AcceptsTab="True" Block.LineHeight="15" TextChanged="cambiosTexto" GotMouseCapture="selection" KeyUp="keyUp" IsDocumentEnabled="True" DataContextChanged="cambio" HorizontalAlignment="Left">
+            <FlowDocument/>
+        </RichTextBox>
+        <StackPanel x:Name="mainPanel" Grid.Column="1" Grid.RowSpan="5" Grid.Row="1" Width="200" Background="#FF241B2F">
+            <Label x:Name="labelInfo" Content="Label" Foreground="White"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -28,6 +28,8 @@ namespace IDEProject
         public MainWindow()
         {
             InitializeComponent();
+            consoleText.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+            consoleText.Document.PageWidth = 1920;
         }
 
         private void newFile_Click(object sender, RoutedEventArgs e)
@@ -56,6 +58,7 @@ namespace IDEProject
                     consoleText.Document.Blocks.Clear();
                     consoleText.Document.Blocks.Add(new Paragraph(new Run(read.ReadToEnd())));
                     read.Close();
+                    paintText();
                 }
             }
             catch (Exception)
@@ -91,8 +94,9 @@ namespace IDEProject
         {
             TextRange range = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
             String words = range.Text;
-            if(words.Contains(";"))
+            if (words.Contains(";"))
             {
+                
                 int i = words.LastIndexOf(";");
                 String aux = words;
                 String newString = aux.Remove(i, words.Length - i);
@@ -100,6 +104,11 @@ namespace IDEProject
                 TextRange rangeOfText1 = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
                 rangeOfText1.Text = newString;
                 paint(";");
+                
+                //Mover cursor
+                TextPointer pos = consoleText.CaretPosition;
+                pos = pos.DocumentEnd;
+                consoleText.CaretPosition = pos;
             }
   
             //var startPointer = consoleText.Document.ContentStart.GetPositionAtOffset(0);
@@ -107,11 +116,34 @@ namespace IDEProject
             //consoleText.Selection.Select(startPointer, endPointer);
         }
 
+        private void getLines()
+        {
+            TextPointer pos0 = consoleText.Document.ContentStart;
+            TextPointer pos1 = consoleText.CaretPosition;
+            TextRange rangeOfText1 = new TextRange(pos0, pos1);
+            int len = rangeOfText1.Text.Length;
+
+            int column = pos0.GetOffsetToPosition(pos1);
+            bool inicio = pos1.IsAtLineStartPosition;
+
+            labelInfo.Content = "Len: " + len + ", posRel: " + column;
+
+
+        }
+
         private void paint(string texto)
         {
             TextRange rangeOfText1 = new TextRange(consoleText.Document.ContentEnd, consoleText.Document.ContentEnd);
             rangeOfText1.Text = texto;
             rangeOfText1.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkOrange);
+        }
+
+        private void cursorPosition()
+        {
+            TextPointer pos = consoleText.CaretPosition;
+            pos = consoleText.CaretPosition.GetPositionAtOffset(20);
+            pos = pos.DocumentEnd;
+            consoleText.CaretPosition = pos;
         }
 
         string StringFromRichTextBox(RichTextBox rtb)
@@ -127,12 +159,29 @@ namespace IDEProject
 
         private void selection(object sender, MouseEventArgs e)
         {
-            paintText();
+            //paintText();
+            //cursorPosition();
         }
 
         private void keyUp(object sender, KeyEventArgs e)
         {
-            paintText();
+            //paintText();
+            //cursorPosition();
+            //String keyD = e.Key.ToString();
+            //MessageBox.Show(keyD);
+            /**
+            String key = e.Key.ToString();
+            if (key.Equals("Return") || key.Equals("Up") || key.Equals("Down") || key.Equals("Left") || key.Equals("Right"))
+            {
+                getLines();
+            }
+            */
+            getLines();
+        }
+
+        private void cambio(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //getLines();
         }
     }
 }
