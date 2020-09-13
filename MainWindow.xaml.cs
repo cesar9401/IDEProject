@@ -34,7 +34,8 @@ namespace IDEProject
 
         private void newFile_Click(object sender, RoutedEventArgs e)
         {
-
+            //probandoAutomata();
+            analizarCadena();
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -77,7 +78,7 @@ namespace IDEProject
                     if (path.Length != 0)
                     {
                         StreamWriter save = File.CreateText(path);
-                        String text = StringFromRichTextBox(consoleText);
+                        String text = StringFromRichTextBox();
                         save.Write(text);
                         save.Flush();
                         save.Close();
@@ -119,7 +120,7 @@ namespace IDEProject
         private void getLines()
         {
             TextPointer pos0 = consoleText.Document.ContentStart;
-            TextPointer pos1 = consoleText.CaretPosition;
+            TextPointer pos1 = consoleText.Document.ContentEnd;
             TextRange rangeOfText1 = new TextRange(pos0, pos1);
             int len = rangeOfText1.Text.Length;
 
@@ -146,9 +147,9 @@ namespace IDEProject
             consoleText.CaretPosition = pos;
         }
 
-        string StringFromRichTextBox(RichTextBox rtb)
+        string StringFromRichTextBox()
         {
-            TextRange textRange = new TextRange(rtb.Document.ContentStart, rtb.Document.ContentEnd);
+            TextRange textRange = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
             return textRange.Text;
         }
 
@@ -182,6 +183,39 @@ namespace IDEProject
         private void cambio(object sender, DependencyPropertyChangedEventArgs e)
         {
             //getLines();
+        }
+
+        private void analizarCadena() 
+        {
+            String cadena = StringFromRichTextBox();
+            for(int i=0; i<cadena.Length; i++)
+            {
+                String ch = cadena.Substring(i, 1);
+                char c = Convert.ToChar(ch);
+                int index = (int)c;
+                MessageBox.Show("index: " + index);
+            }
+        }
+
+        private void probandoAutomata()
+        {
+            int estados = 3;
+            List<int> aceptacion = new List<int>();
+            aceptacion.Add(2);
+            List<String> alfabeto = new List<String>();
+            alfabeto.Add("0");
+            alfabeto.Add("1");
+            Automata afd = new Automata(estados, aceptacion, alfabeto);
+            afd.setTransiciones(0, 0, 1);
+            afd.setTransiciones(0 ,1 ,2);
+            afd.setTransiciones(1, 0, 1);
+            afd.setTransiciones(1, 1, 2);
+            afd.setTransiciones(2, 0, 1);
+            afd.setTransiciones(2, 1, 2);
+
+            String texto = StringFromRichTextBox();
+            Boolean estado = afd.verificarCadena(texto);
+            labelCadena.Content = estado;
         }
     }
 }

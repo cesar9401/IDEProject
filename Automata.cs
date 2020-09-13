@@ -17,6 +17,7 @@ namespace IDEProject
         private List<int> estadosA = new List<int>();
         //Transiciones
         private List<List<int>> transiciones = new List<List<int>>();
+        private int[,] trans;
         //Alfabeto
         private List<String> alfabeto = new List<String>();
 
@@ -27,6 +28,7 @@ namespace IDEProject
             this.estadosA = estadosA;
             this.alfabeto = alfabeto;
             this.setEstados();
+            this.trans = new int[this.estados.Count, this.alfabeto.Count];
         }
 
         private void setEstados()
@@ -37,34 +39,32 @@ namespace IDEProject
             }
         }
 
-        private void setEstadosAceptacion(int q)
-        {
-            if(estados.Contains(q))
-            {
-                estadosA.Add(q);
-            }
-        }
-
         public void setTransiciones(int x, int y, int q)
         {
             if(estados.Contains(q))
             {
-                transiciones[x].Insert(y, q);
+                //MessageBox.Show("valor q: " + q);
+                //transiciones[x].Insert(y, q);
+                trans[x, y] = q;
             }
         }
         
         private int getEstado(int x, int y) 
         {
-            return transiciones[x][y];
+            //return transiciones[x][y];
+            return trans[x, y];
         }
 
-        public Boolean verificarCadena(String cadena)
+        public Boolean verificarCadena(String text)
         {
             int q = 0;
-            for(int i=0; i<cadena.Length; i++)
+            String cadena = text;
+            MessageBox.Show(cadena.Length + " length");
+            for(int i=0; i<text.Length-2; i++)
             {
-                int index = alfabeto.IndexOf(cadena.Substring(i));
-                q = getEstado(q, index);
+                int index = alfabeto.IndexOf(cadena.Substring(i, 1));
+                q = trans[q, index];
+                MessageBox.Show("q: " + q);
                 if(q == -1)
                 {
                     break;
