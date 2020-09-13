@@ -40,7 +40,9 @@ namespace IDEProject
             //path = null; 
             //this.Title = "NoteC";
             //analizarCadena();
-            paintText();
+            String content = StringFromRichTextBox();
+            String str = "queso";
+            paintText(content, str, consoleText.Document.ContentStart);
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -64,7 +66,6 @@ namespace IDEProject
                     consoleText.Document.Blocks.Clear();
                     consoleText.Document.Blocks.Add(new Paragraph(new Run(read.ReadToEnd())));
                     read.Close();
-                    paintText();
 
                     this.Title = path + " - NoteC";
                 }
@@ -120,40 +121,49 @@ namespace IDEProject
             }
         }
 
-        private void paintText()
+        private void paintText(String content, String str, TextPointer pos0)
         {
             int i = 0;
-            TextPointer pos0 = consoleText.Document.ContentStart;
             TextPointer posF = consoleText.Document.ContentEnd;
             TextRange range = new TextRange(pos0, posF);
-            String content = range.Text;
+            String text = range.Text;
 
             String aux = content;
-            String str = "queso";
+            //String str = "queso";
             int index = 0;
-            while (aux.Contains(str))
+            if(aux.Contains(str))
             {
                 index = aux.IndexOf(str);
-                aux = aux.Substring(0, index);
-                if (i == 0)
+                aux = content.Substring(0, index);
+                MessageBox.Show("aux: " + aux);
+                if(text.Length != 0)
                 {
                     range.Text = aux;
                 }
                 else
                 {
-                    paint(aux, Brushes.White);
+                    paint(aux, Brushes.White, pos0);
                 }
+                pos0 = consoleText.Document.ContentEnd;
+                paint(str, Brushes.DarkOrange, pos0);
+                paint("", Brushes.White, pos0);
 
-                consoleText.CaretPosition = consoleText.Document.ContentEnd;
-                paint(str, Brushes.DarkOrange);
                 i = index + str.Length;
                 aux = content.Substring(i, content.Length - i);
-                MessageBox.Show(aux);
+                MessageBox.Show("aux: " + aux);
                 if (!aux.Contains(str))
                 {
                     //paint(aux.Substring(0, aux.IndexOf(str)), Brushes.White);
-                    paint(aux, Brushes.White);
+
+                    paint(aux, Brushes.White, pos0);
+                    paint("", Brushes.White, pos0);
+                    consoleText.CaretPosition = pos0;
                 }
+                else
+                {
+                    paintText(aux, str, pos0);
+                }
+
             }
         }
 
@@ -176,9 +186,9 @@ namespace IDEProject
             labelColumn.Content = "Column -> " + column;
         }
 
-        private void paint(string texto, SolidColorBrush color)
+        private void paint(string texto, SolidColorBrush color, TextPointer pos0)
         {
-            TextRange rangeOfText1 = new TextRange(consoleText.Document.ContentEnd, consoleText.Document.ContentEnd);
+            TextRange rangeOfText1 = new TextRange(pos0, pos0);
             rangeOfText1.Text = texto;
             rangeOfText1.ApplyPropertyValue(TextElement.ForegroundProperty, color);
         }
