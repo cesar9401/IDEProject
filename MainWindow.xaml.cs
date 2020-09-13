@@ -39,7 +39,8 @@ namespace IDEProject
             //consoleText.Document.Blocks.Clear();
             //path = null; 
             //this.Title = "NoteC";
-            analizarCadena();
+            //analizarCadena();
+            paintText();
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -121,27 +122,39 @@ namespace IDEProject
 
         private void paintText()
         {
-            TextRange range = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
-            String words = range.Text;
-            if (words.Contains(";"))
+            int i = 0;
+            TextPointer pos0 = consoleText.Document.ContentStart;
+            TextPointer posF = consoleText.Document.ContentEnd;
+            TextRange range = new TextRange(pos0, posF);
+            String content = range.Text;
+
+            String aux = content;
+            String str = "queso";
+            int index = 0;
+            while (aux.Contains(str))
             {
-                int i = words.LastIndexOf(";");
-                String aux = words;
-                String newString = aux.Remove(i, words.Length - i);
-                consoleText.Document.Blocks.Clear();
-                TextRange rangeOfText1 = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
-                rangeOfText1.Text = newString;
-                paint(";");
-                
-                //Mover cursor
-                TextPointer pos = consoleText.CaretPosition;
-                pos = pos.DocumentEnd;
-                consoleText.CaretPosition = pos;
+                index = aux.IndexOf(str);
+                aux = aux.Substring(0, index);
+                if (i == 0)
+                {
+                    range.Text = aux;
+                }
+                else
+                {
+                    paint(aux, Brushes.White);
+                }
+
+                consoleText.CaretPosition = consoleText.Document.ContentEnd;
+                paint(str, Brushes.DarkOrange);
+                i = index + str.Length;
+                aux = content.Substring(i, content.Length - i);
+                MessageBox.Show(aux);
+                if (!aux.Contains(str))
+                {
+                    //paint(aux.Substring(0, aux.IndexOf(str)), Brushes.White);
+                    paint(aux, Brushes.White);
+                }
             }
-  
-            //var startPointer = consoleText.Document.ContentStart.GetPositionAtOffset(0);
-            //var endPointer = consoleText.Document.ContentEnd.GetPositionAtOffset(-10);
-            //consoleText.Selection.Select(startPointer, endPointer);
         }
 
         private void getLines()
@@ -163,11 +176,11 @@ namespace IDEProject
             labelColumn.Content = "Column -> " + column;
         }
 
-        private void paint(string texto)
+        private void paint(string texto, SolidColorBrush color)
         {
             TextRange rangeOfText1 = new TextRange(consoleText.Document.ContentEnd, consoleText.Document.ContentEnd);
             rangeOfText1.Text = texto;
-            rangeOfText1.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.DarkOrange);
+            rangeOfText1.ApplyPropertyValue(TextElement.ForegroundProperty, color);
         }
 
         private void cursorPosition()
@@ -191,25 +204,13 @@ namespace IDEProject
 
         private void selection(object sender, MouseEventArgs e)
         {
-            //paintText();
-            //cursorPosition();
             getLines();
         }
 
         private void keyUp(object sender, KeyEventArgs e)
         {
-            //paintText();
-            //cursorPosition();
-            //String keyD = e.Key.ToString();
-            //MessageBox.Show(keyD);
-            /**
-            String key = e.Key.ToString();
-            if (key.Equals("Return") || key.Equals("Up") || key.Equals("Down") || key.Equals("Left") || key.Equals("Right"))
-            {
-                getLines();
-            }
-            */
             getLines();
+            //paintText();
         }
 
         private void cambio(object sender, DependencyPropertyChangedEventArgs e)
