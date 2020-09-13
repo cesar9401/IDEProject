@@ -42,8 +42,10 @@
         <RichTextBox x:Name="consoleText" Grid.Column="2" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Background="#FF2A2139" Foreground="#FFFDFEFE" SelectionBrush="#7FFDFEFE" Padding="10,15,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="15" FontFamily="Consolas" Block.LineHeight="15" TextChanged="cambiosTexto" GotMouseCapture="selection" KeyUp="keyUp" IsDocumentEnabled="True" DataContextChanged="cambio" HorizontalAlignment="Left" AcceptsTab="True">
             <FlowDocument/>
         </RichTextBox>
-        <StackPanel x:Name="mainPanel" Grid.Column="1" Grid.RowSpan="5" Grid.Row="1" Width="200" Background="#FF241B2F">
-            <Label x:Name="labelInfo" Content="Label" Foreground="White"/>
+        <StackPanel x:Name="mainPanel" Grid.Column="1" Grid.RowSpan="5" Grid.Row="1" Width="200" Background="#FF241B2F" MouseLeftButtonDown="MouseClick">
+            <Label x:Name="labelColumn" Content="Column -> 0" Foreground="White"/>
+            <Label x:Name="labelRow" Content="Row -> 1" Foreground="White"/>
+
             <Label x:Name="labelCadena" Content="Label" Foreground="White"/>
 
         </StackPanel>

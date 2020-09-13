@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using System.Data.Common;
 
 namespace IDEProject
 {
@@ -22,7 +23,6 @@ namespace IDEProject
     /// </summary>
     public partial class MainWindow : Window
     {
-
         private String path;
 
         public MainWindow()
@@ -30,11 +30,15 @@ namespace IDEProject
             InitializeComponent();
             consoleText.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
             consoleText.Document.PageWidth = 1920;
+            this.Title = "NoteC";
         }
 
         private void newFile_Click(object sender, RoutedEventArgs e)
         {
             //probandoAutomata();
+            //consoleText.Document.Blocks.Clear();
+            //path = null; 
+            //this.Title = "NoteC";
             analizarCadena();
         }
 
@@ -60,6 +64,8 @@ namespace IDEProject
                     consoleText.Document.Blocks.Add(new Paragraph(new Run(read.ReadToEnd())));
                     read.Close();
                     paintText();
+
+                    this.Title = path + " - NoteC";
                 }
             }
             catch (Exception)
@@ -72,7 +78,9 @@ namespace IDEProject
         {
             try
             {
-                //SaveFileDialog save = new SaveFileDialog();
+                SaveFileDialog forSave = new SaveFileDialog();
+                forSave.Title = "Guardar";
+                forSave.Filter = "css files (*.css)|*.css";
                 if (path != null)
                 {
                     if (path.Length != 0)
@@ -82,6 +90,26 @@ namespace IDEProject
                         save.Write(text);
                         save.Flush();
                         save.Close();
+
+                        this.Title = path + " - NoteC";
+                    }
+                }
+                else
+                {
+                    if(forSave.ShowDialog() == true)
+                    {
+                        if (forSave.FileName != null)
+                        {
+                            String pathF = forSave.FileName;
+                            StreamWriter save = File.CreateText(pathF);
+                            String text = StringFromRichTextBox();
+                            save.Write(text);
+                            save.Flush();
+                            save.Close();
+                            path = pathF;
+
+                            this.Title = path + " - NoteC";
+                        }
                     }
                 }
             }
@@ -97,7 +125,6 @@ namespace IDEProject
             String words = range.Text;
             if (words.Contains(";"))
             {
-                
                 int i = words.LastIndexOf(";");
                 String aux = words;
                 String newString = aux.Remove(i, words.Length - i);
@@ -120,16 +147,20 @@ namespace IDEProject
         private void getLines()
         {
             TextPointer pos0 = consoleText.Document.ContentStart;
-            TextPointer pos1 = consoleText.Document.ContentEnd;
+            TextPointer pos1 = consoleText.CaretPosition;
+            TextPointer posI = consoleText.CaretPosition.GetLineStartPosition(0);
+
             TextRange rangeOfText1 = new TextRange(pos0, pos1);
-            int len = rangeOfText1.Text.Length;
+            TextRange rangeOfTextL = new TextRange(posI, pos1);
+            
+            int length = rangeOfText1.Text.Length;
+            int dif = pos0.GetOffsetToPosition(pos1);
 
-            int column = pos0.GetOffsetToPosition(pos1);
-            bool inicio = pos1.IsAtLineStartPosition;
+            int row = (dif - length) / 2;
+            int column = rangeOfTextL.Text.Length;
 
-            labelInfo.Content = "Len: " + len + ", posRel: " + column;
-
-
+            labelRow.Content = "Row -> " + row;
+            labelColumn.Content = "Column -> " + column;
         }
 
         private void paint(string texto)
@@ -162,6 +193,7 @@ namespace IDEProject
         {
             //paintText();
             //cursorPosition();
+            getLines();
         }
 
         private void keyUp(object sender, KeyEventArgs e)
@@ -216,6 +248,11 @@ namespace IDEProject
             String texto = StringFromRichTextBox();
             Boolean estado = afd.verificarCadena(texto);
             labelCadena.Content = estado;
+        }
+
+        private void MouseClick(object sender, MouseButtonEventArgs e)
+        {
+            getLines();
         }
     }
 }
