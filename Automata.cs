@@ -9,6 +9,7 @@ namespace IDEProject
 {
     class Automata
     {
+        public String cadena { get; set; }
         private int estadoInicial { get; set; }
         private int numeroEstados { get; set; }
         //estados
@@ -21,7 +22,12 @@ namespace IDEProject
         //Alfabeto
         private List<String> alfabeto = new List<String>();
 
-        public Automata(int numeroEstados, List<int> estadosA, List<String> alfabeto)
+        public Automata()
+        {
+            setAutomata();
+        }
+
+        public void buildAutomata(int numeroEstados, List<int> estadosA, List<String> alfabeto)
         {
             this.estadoInicial = 0;
             this.numeroEstados = numeroEstados;
@@ -55,16 +61,26 @@ namespace IDEProject
             return trans[x, y];
         }
 
-        public Boolean verificarCadena(String text)
+        public Boolean verificarCadena()
         {
+            DefLenguaje leng = new DefLenguaje();
             int q = 0;
-            String cadena = text;
-            MessageBox.Show(cadena.Length + " length");
-            for(int i=0; i<text.Length-2; i++)
+            MessageBox.Show("length: " + cadena.Length);
+            for(int i=0; i<cadena.Length-2; i++)
             {
-                int index = alfabeto.IndexOf(cadena.Substring(i, 1));
-                q = trans[q, index];
-                MessageBox.Show("q: " + q);
+                int code = (int)Convert.ToChar(cadena.Substring(i, 1));
+                String whatIs = leng.WhatIs(code);
+                int index = alfabeto.IndexOf(whatIs);
+                try
+                {
+                    q = trans[q, index];
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Error: " + whatIs);
+                    return false;
+                }
+                MessageBox.Show("Estado: " + q);
                 if(q == -1)
                 {
                     break;
@@ -72,6 +88,34 @@ namespace IDEProject
             }
 
             return estadosA.Contains(q);
+        }
+
+        public void setAutomata()
+        {
+            int estados = 2;
+            List<int> acep = new List<int>();
+            acep.Add(1);
+            List<String> alf = new List<String>();
+            alf.Add("L");
+            this.buildAutomata(estados, acep, alf);
+            this.setTransiciones(0, 0, 1);
+            this.setTransiciones(1, 0, 1);
+
+            /*
+            int estados = 3;
+            List<int> aceptacion = new List<int>();
+            aceptacion.Add(2);
+            List<String> alfabeto = new List<String>();
+            alfabeto.Add("0");
+            alfabeto.Add("1");
+            Automata afd = new Automata(estados, aceptacion, alfabeto);
+            this.setTransiciones(0, 0, 1);
+            this.setTransiciones(0, 1, 2);
+            this.setTransiciones(1, 0, 1);
+            this.setTransiciones(1, 1, 2);
+            this.setTransiciones(2, 0, 1);
+            this.setTransiciones(2, 1, 2);
+            */
         }
     }
 }

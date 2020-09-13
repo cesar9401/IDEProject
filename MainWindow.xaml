@@ -23,7 +23,7 @@
             <RowDefinition Height="100"></RowDefinition>
         </Grid.RowDefinitions>
         
-        <Menu x:Name="mainMenu" HorizontalAlignment="Left" Height="30" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
+        <Menu x:Name="mainMenu" HorizontalAlignment="Left" Height="30" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3">
             <MenuItem x:Name="fileItem" Header="File" Height="30" Width="75" FontSize="14" Background="#FF171520" Foreground="White" BorderBrush="#FF171520" HorizontalContentAlignment="Center">
                 <MenuItem x:Name="newFile" Header="New File" Height="30" Width="200" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Click="newFile_Click" Cursor="Hand"/>
                 <MenuItem x:Name="openFile" Header="Open File" Height="30" Width="200" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Cursor="Hand" Click="openFile_Click"/>
@@ -37,8 +37,9 @@
                 <MenuItem x:Name="cut" Command="Cut" Height="30" Width="180" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Cursor="Hand"/>
                 <MenuItem x:Name="paste" Command="Paste" Height="30" Width="180" FontSize="14" Background="#FF2A2139" Foreground="White" BorderBrush="#FF171520" HorizontalAlignment="Left" Cursor="Hand"/>
             </MenuItem>
-
         </Menu>
+        
+        <Button x:Name="Compilar" Grid.Column="0" Grid.Row="1" Width="60" Height="60" Content="PLAY" HorizontalAlignment="Center" Click="Compilar_Click" Background="#FF28B463" Foreground="White" FontSize="16" />
         <RichTextBox x:Name="consoleText" Grid.Column="2" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3" Background="#FF2A2139" Foreground="#FFFDFEFE" SelectionBrush="#7FFDFEFE" Padding="10,15,0,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontSize="15" FontFamily="Consolas" Block.LineHeight="15" TextChanged="cambiosTexto" GotMouseCapture="selection" KeyUp="keyUp" IsDocumentEnabled="True" DataContextChanged="cambio" HorizontalAlignment="Left" AcceptsTab="True">
             <FlowDocument/>
         </RichTextBox>

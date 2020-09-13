@@ -35,14 +35,14 @@ namespace IDEProject
 
         private void newFile_Click(object sender, RoutedEventArgs e)
         {
-            //probandoAutomata();
-            //consoleText.Document.Blocks.Clear();
-            //path = null; 
-            //this.Title = "NoteC";
-            //analizarCadena();
+            consoleText.Document.Blocks.Clear();
+            path = null; 
+            this.Title = "NoteC";
+            /**
             String content = StringFromRichTextBox();
             String str = "queso";
             paintText(content, str, consoleText.Document.ContentStart);
+            */
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -240,30 +240,19 @@ namespace IDEProject
             }
         }
 
-        private void probandoAutomata()
-        {
-            int estados = 3;
-            List<int> aceptacion = new List<int>();
-            aceptacion.Add(2);
-            List<String> alfabeto = new List<String>();
-            alfabeto.Add("0");
-            alfabeto.Add("1");
-            Automata afd = new Automata(estados, aceptacion, alfabeto);
-            afd.setTransiciones(0, 0, 1);
-            afd.setTransiciones(0 ,1 ,2);
-            afd.setTransiciones(1, 0, 1);
-            afd.setTransiciones(1, 1, 2);
-            afd.setTransiciones(2, 0, 1);
-            afd.setTransiciones(2, 1, 2);
-
-            String texto = StringFromRichTextBox();
-            Boolean estado = afd.verificarCadena(texto);
-            labelCadena.Content = estado;
-        }
-
         private void MouseClick(object sender, MouseButtonEventArgs e)
         {
             getLines();
+        }
+
+        private void Compilar_Click(object sender, RoutedEventArgs e)
+        {
+            //analizarCadena();
+            String cadena = StringFromRichTextBox();
+            Automata aut = new Automata();
+            aut.cadena = cadena;
+            Boolean estado = aut.verificarCadena();
+            labelCadena.Content = estado;
         }
     }
 }

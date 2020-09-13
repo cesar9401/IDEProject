@@ -8,7 +8,6 @@ namespace IDEProject
 {
     class DefLenguaje
     {
-       
         private int code { get; set; }
 
         public String WhatIs(int code)
@@ -18,11 +17,7 @@ namespace IDEProject
             {
                 return "N";
             }
-            else if (IsLowerLetter())
-            {
-                return "l";
-            }
-            else if (IsUpperLetter())
+            else if (IsLetter())
             {
                 return "L";
             }else if (IsSpace())
@@ -38,19 +33,24 @@ namespace IDEProject
             return code >= 48 && code <= 57;
         }
 
-        public Boolean IsLowerLetter()
+        public Boolean IsLetter()
         {
-            return code >= 97 && code <= 122;
-        }
-
-        public Boolean IsUpperLetter()
-        {
-            return code >= 65 && code <= 90;
+            return code>=65 && code <=90 || code >= 97 && code <= 122 || code == 209 || code ==209;
         }
 
         public Boolean IsSpace()
         {
             return code == 32;
+        }
+
+        public Boolean isFinalLine()
+        {
+            return code == 10;
+        }
+
+        public Boolean isEnterKey()
+        {
+            return code == 13;
         }
     }
 }
