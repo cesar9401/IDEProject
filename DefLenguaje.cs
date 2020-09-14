@@ -24,6 +24,10 @@ namespace IDEProject
             {
                 return "S";
             }
+            else if (isPoint())
+            {
+                return ".";
+            }
 
             return "E";
         }
@@ -51,6 +55,11 @@ namespace IDEProject
         public Boolean isEnterKey()
         {
             return code == 13;
+        }
+
+        public Boolean isPoint()
+        {
+            return code == 46;
         }
     }
 }

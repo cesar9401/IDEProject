@@ -21,6 +21,8 @@ namespace IDEProject
         private int[,] trans;
         //Alfabeto
         private List<String> alfabeto = new List<String>();
+        //Palabras reservadas
+        private List<String> reservadas;
 
         public Automata()
         {
@@ -35,6 +37,26 @@ namespace IDEProject
             this.alfabeto = alfabeto;
             this.setEstados();
             this.trans = new int[this.estados.Count, this.alfabeto.Count];
+        }
+
+        private void setReservadas()
+        {
+            reservadas = new List<String>()
+            {
+                "entero",
+                "decimal",
+                "cadena",
+                "booleano",
+                "caracter",
+                "SI",
+                "SINO",
+                "SINO_SI",
+                "MIENTRAS",
+                "HACER",
+                "DESDE",
+                "HASTA",
+                "INCREMENTO"
+            };
         }
 
         private void setEstados()
@@ -61,11 +83,10 @@ namespace IDEProject
             return trans[x, y];
         }
 
-        public Boolean verificarCadena()
+        public String verificarCadena()
         {
             DefLenguaje leng = new DefLenguaje();
             int q = 0;
-            MessageBox.Show("length: " + cadena.Length);
             for(int i=0; i<cadena.Length-2; i++)
             {
                 int code = (int)Convert.ToChar(cadena.Substring(i, 1));
@@ -78,44 +99,67 @@ namespace IDEProject
                 catch (Exception)
                 {
                     MessageBox.Show("Error: " + whatIs);
-                    return false;
+                    return "SIGMA";
                 }
-                MessageBox.Show("Estado: " + q);
+
                 if(q == -1)
                 {
                     break;
                 }
             }
 
-            return estadosA.Contains(q);
+            if(q == -1)
+            {
+                return "ERROR";
+            }
+
+            if (estadosA.Contains(q))
+            {
+                switch (q)
+                {
+                    case 1:
+                        return "PALABRA";
+                    case 2:
+                        return "NUMERO";
+                    case 4:
+                        return "DECIMAL";
+                }
+            }
+
+            return "NO VALIDO";
         }
 
         public void setAutomata()
         {
-            int estados = 2;
+            int estados = 5;
             List<int> acep = new List<int>();
             acep.Add(1);
+            acep.Add(2);
+            acep.Add(4);
             List<String> alf = new List<String>();
             alf.Add("L");
+            alf.Add("N");
+            alf.Add(".");
             this.buildAutomata(estados, acep, alf);
-            this.setTransiciones(0, 0, 1);
-            this.setTransiciones(1, 0, 1);
+            setEmpties();
+            setTransiciones(0, 0, 1);
+            setTransiciones(0, 1, 2);
+            setTransiciones(1, 0, 1);
+            setTransiciones(2, 1, 2);
+            setTransiciones(2, 2, 3);
+            setTransiciones(3, 1, 4);
+            setTransiciones(4, 1, 4);
+        }
 
-            /*
-            int estados = 3;
-            List<int> aceptacion = new List<int>();
-            aceptacion.Add(2);
-            List<String> alfabeto = new List<String>();
-            alfabeto.Add("0");
-            alfabeto.Add("1");
-            Automata afd = new Automata(estados, aceptacion, alfabeto);
-            this.setTransiciones(0, 0, 1);
-            this.setTransiciones(0, 1, 2);
-            this.setTransiciones(1, 0, 1);
-            this.setTransiciones(1, 1, 2);
-            this.setTransiciones(2, 0, 1);
-            this.setTransiciones(2, 1, 2);
-            */
+        private void setEmpties()
+        {
+            for(int i=0; i<trans.GetLength(0); i++)
+            {
+                for(int j=0; j<trans.GetLength(1); j++)
+                {
+                    trans[i, j] = -1;
+                }
+            }
         }
     }
 }

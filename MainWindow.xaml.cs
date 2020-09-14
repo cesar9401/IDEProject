@@ -251,7 +251,7 @@ namespace IDEProject
             String cadena = StringFromRichTextBox();
             Automata aut = new Automata();
             aut.cadena = cadena;
-            Boolean estado = aut.verificarCadena();
+            String estado = aut.verificarCadena();
             labelCadena.Content = estado;
         }
     }
