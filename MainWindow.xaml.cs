@@ -248,11 +248,19 @@ namespace IDEProject
         private void Compilar_Click(object sender, RoutedEventArgs e)
         {
             //analizarCadena();
+
+            //Eliminar enter and final line
+
             String cadena = StringFromRichTextBox();
+            cadena = cadena.Remove(cadena.Length - 2, 2);
+
             Automata aut = new Automata();
             aut.cadena = cadena;
             String estado = aut.verificarCadena();
             labelCadena.Content = estado;
+
+            //int cod = (int)'\"';
+            //MessageBox.Show("Code: " + cod);
         }
     }
 }

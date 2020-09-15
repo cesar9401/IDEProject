@@ -71,15 +71,12 @@ namespace IDEProject
         {
             if(estados.Contains(q))
             {
-                //MessageBox.Show("valor q: " + q);
-                //transiciones[x].Insert(y, q);
                 trans[x, y] = q;
             }
         }
         
         private int getEstado(int x, int y) 
         {
-            //return transiciones[x][y];
             return trans[x, y];
         }
 
@@ -87,7 +84,7 @@ namespace IDEProject
         {
             DefLenguaje leng = new DefLenguaje();
             int q = 0;
-            for(int i=0; i<cadena.Length-2; i++)
+            for(int i=0; i<cadena.Length; i++)
             {
                 int code = (int)Convert.ToChar(cadena.Substring(i, 1));
                 String whatIs = leng.WhatIs(code);
@@ -117,11 +114,11 @@ namespace IDEProject
             {
                 switch (q)
                 {
-                    case 1:
-                        return "PALABRA";
                     case 2:
-                        return "NUMERO";
-                    case 4:
+                        return "STRING";
+                    case 3:
+                        return "ENTERO";
+                    case 5:
                         return "DECIMAL";
                 }
             }
@@ -131,24 +128,42 @@ namespace IDEProject
 
         public void setAutomata()
         {
-            int estados = 5;
+            int estados = 6;
             List<int> acep = new List<int>();
-            acep.Add(1);
             acep.Add(2);
-            acep.Add(4);
+            acep.Add(3);
+            acep.Add(5);
             List<String> alf = new List<String>();
             alf.Add("L");
             alf.Add("N");
-            alf.Add(".");
+            alf.Add("S");
+            alf.Add("C");
+            alf.Add("A");
+            alf.Add("D");
+            alf.Add("P");
+            alf.Add("U");
+
             this.buildAutomata(estados, acep, alf);
             setEmpties();
-            setTransiciones(0, 0, 1);
-            setTransiciones(0, 1, 2);
+            //String
+            setTransiciones(0, 3, 1);
             setTransiciones(1, 0, 1);
-            setTransiciones(2, 1, 2);
-            setTransiciones(2, 2, 3);
-            setTransiciones(3, 1, 4);
-            setTransiciones(4, 1, 4);
+            setTransiciones(1, 1, 1);
+            setTransiciones(1, 2, 1);
+            setTransiciones(1, 3, 2);
+            setTransiciones(1, 4, 1);
+            setTransiciones(1, 5, 1);
+            setTransiciones(1, 6, 1);
+            setTransiciones(1, 7, 1);
+
+            //Numeros
+            setTransiciones(0, 1, 3);
+            setTransiciones(3, 1, 3);
+            setTransiciones(3, 6, 4);
+            setTransiciones(4, 1, 5);
+            setTransiciones(5, 1, 5);
+
+            //Cadenas
         }
 
         private void setEmpties()

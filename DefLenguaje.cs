@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace IDEProject
 {
@@ -20,15 +21,31 @@ namespace IDEProject
             else if (IsLetter())
             {
                 return "L";
-            }else if (IsSpace())
+            } 
+            else if (isDoubleQuotes())
+            {
+                return "C";
+            }
+            else if(IsAsterisk())
+            {
+                return "A";
+            }
+            else if (isDiagonal())
+            {
+                return "D";
+            }
+            else if (IsPoint()){
+                return "P";
+            }
+            else if (IsSymbol())
             {
                 return "S";
             }
-            else if (isPoint())
+            else if (isUnderscore())
             {
-                return ".";
+                return "U";
             }
-
+           
             return "E";
         }
 
@@ -39,12 +56,37 @@ namespace IDEProject
 
         public Boolean IsLetter()
         {
-            return code>=65 && code <=90 || code >= 97 && code <= 122 || code == 209 || code ==209;
+            return code>=65 && code <=90 || code >= 97 && code <= 122 || code == 209 || code ==241;
         }
 
-        public Boolean IsSpace()
+        public Boolean IsSymbol()
         {
-            return code == 32;
+            return (code>=32 && code <=126 && !IsNumber() && !IsLetter()) && !IsPoint() && !IsAsterisk() && !isDiagonal() && !isDoubleQuotes() && !isUnderscore() || code==191;
+        }
+
+        public Boolean IsPoint()
+        {
+            return code == 46;
+        }
+
+        public Boolean IsAsterisk()
+        {
+            return code == 42;
+        }
+
+        public Boolean isDiagonal()
+        {
+            return code == 47;
+        }
+
+        public Boolean isDoubleQuotes()
+        {
+            return code == 34;
+        }
+
+        public Boolean isUnderscore()
+        {
+            return code == 95;
         }
 
         public Boolean isFinalLine()
@@ -55,11 +97,6 @@ namespace IDEProject
         public Boolean isEnterKey()
         {
             return code == 13;
-        }
-
-        public Boolean isPoint()
-        {
-            return code == 46;
         }
     }
 }
