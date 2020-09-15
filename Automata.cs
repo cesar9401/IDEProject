@@ -120,6 +120,8 @@ namespace IDEProject
                         return "ENTERO";
                     case 5:
                         return "DECIMAL";
+                    case 6:
+                        return "CADENA";
                 }
             }
 
@@ -128,11 +130,12 @@ namespace IDEProject
 
         public void setAutomata()
         {
-            int estados = 6;
+            int estados = 7;
             List<int> acep = new List<int>();
             acep.Add(2);
             acep.Add(3);
             acep.Add(5);
+            acep.Add(6);
             List<String> alf = new List<String>();
             alf.Add("L");
             alf.Add("N");
@@ -164,6 +167,10 @@ namespace IDEProject
             setTransiciones(5, 1, 5);
 
             //Cadenas
+            setTransiciones(0, 0, 6);
+            setTransiciones(6, 0, 6);
+            setTransiciones(6, 1, 6);
+            setTransiciones(6, 7, 6);
         }
 
         private void setEmpties()
