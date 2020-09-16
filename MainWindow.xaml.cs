@@ -240,45 +240,60 @@ namespace IDEProject
 
             //Eliminar enter and final line
             String cadena = StringFromRichTextBox();
-            cadena = cadena.Remove(cadena.Length - 2, 2);
+            //cadena = cadena.Remove(cadena.Length - 2, 2);
 
             Automata aut = new Automata();
-            aut.cadena = cadena;
-            String estado = aut.verificarCadena();
-            labelCadena.Content = estado;
+            aut.str = cadena;
+            List<Token> tokens = aut.verificarCadena();
 
-            SolidColorBrush color = Brushes.White;
-            switch (estado) 
+            /*
+            labelCadena.Content = tokens[0].type;
+            String estado = tokens[0].type;
+            String word = tokens[0].cadena;
+            MessageBox.Show("Len: " + tokens[0].cadena.Length);
+            */
+            TextRange range = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
+            range.Text = "";
+
+            for (int i=0; i<tokens.Count; i++)
             {
-                case "COMENTARIO":
-                    color = Brushes.Red;
-                    break;
-                case "STRING":
-                    color = Brushes.Gray;
-                    break;
-                case "ENTERO":
-                    color = Brushes.Purple;
-                    break;
-                case "DECIMAL":
-                    color = Brushes.LightBlue;
-                    break;
-                case "BOOLEANO":
-                    color = Brushes.DarkOrange;
-                    break;
-                case "CHAR":
-                    color = Brushes.Brown;
-                    break;
-                case "RESERVADO":
-                    color = Brushes.Green;
-                    break;
-                case "OPERADORES":
-                    color = Brushes.DarkBlue;
-                    break;
-                case "OPERADORES_FS":
-                    color = Brushes.Pink;
-                    break;
+                String estado = tokens[i].type;
+                MessageBox.Show(estado);
+                String word = tokens[i].cadena;
+                SolidColorBrush color = Brushes.White;
+                switch (estado)
+                {
+                    case "COMENTARIO":
+                        color = Brushes.Red;
+                        break;
+                    case "STRING":
+                        color = Brushes.Gray;
+                        break;
+                    case "ENTERO":
+                        color = Brushes.Purple;
+                        break;
+                    case "DECIMAL":
+                        color = Brushes.LightBlue;
+                        break;
+                    case "BOOLEANO":
+                        color = Brushes.DarkOrange;
+                        break;
+                    case "CHAR":
+                        color = Brushes.Brown;
+                        break;
+                    case "RESERVADO":
+                        color = Brushes.Green;
+                        break;
+                    case "OPERADORES":
+                        color = Brushes.DarkBlue;
+                        break;
+                    case "OPERADORES_FS":
+                        color = Brushes.Pink;
+                        break;
+                }
+                paint(word, color, consoleText.Document.ContentEnd);
             }
-            paintText(cadena, cadena, consoleText.Document.ContentStart, color);
+
         }
     }
 }

@@ -9,7 +9,7 @@ namespace IDEProject
 {
     class Automata
     {
-        public String cadena { get; set; }
+        public String str { get; set; }
         private int estadoInicial { get; set; }
         private int numeroEstados { get; set; }
         //estados
@@ -24,6 +24,9 @@ namespace IDEProject
         //Palabras reservadas
         private List<String> reservadas;
         private List<String> operadores;
+        //Tokens
+        public List<Token> tokens = new List<Token>();
+        private int index = 0;
 
         public Automata()
         {
@@ -83,17 +86,37 @@ namespace IDEProject
             return trans[x, y];
         }
 
-        public String verificarCadena()
+        public List<Token> verificarCadena()
+        {
+            String cadena = str;
+
+            while(cadena.Length > 0)
+            {
+                String type = CheckSubString(cadena);
+                String content = cadena.Substring(0, index);
+                cadena = cadena.Substring(index);
+                //MessageBox.Show(cadena + " len: " + cadena.Length);
+
+                tokens.Add(new Token(type, content));
+            }
+
+            return tokens;
+        }
+
+        public String CheckSubString(String cadena)
         {
             DefLenguaje leng = new DefLenguaje();
             int q = 0;
-            for(int i=0; i<cadena.Length; i++)
+            int q0 = 0;
+            int i;
+            for(i=0; i<cadena.Length; i++)
             {
                 int code = (int)Convert.ToChar(cadena.Substring(i, 1));
                 String whatIs = leng.WhatIs(code);
                 int index = alfabeto.IndexOf(whatIs);
                 try
                 {
+                    q0 = q;
                     q = trans[q, index];
                 }
                 catch (Exception)
@@ -104,6 +127,8 @@ namespace IDEProject
 
                 if(q == -1)
                 {
+                    q = q0;
+                    index = i;
                     break;
                 }
             }
@@ -115,6 +140,7 @@ namespace IDEProject
 
             if (estadosA.Contains(q))
             {
+                index = i;
                 switch (q)
                 {
                     case 2:
@@ -124,27 +150,28 @@ namespace IDEProject
                     case 5:
                         return "DECIMAL";
                     case 6:
-                        if (reservadas.Contains(cadena))
+                        String str1 = cadena.Substring(0, index);
+                        if (reservadas.Contains(str1))
                         {
-                            if (cadena.Equals("entero"))
+                            if (str1.Equals("entero"))
                                 return "ENTERO";
-                            if (cadena.Equals("decimal"))
+                            if (str1.Equals("decimal"))
                                 return "DECIMAL";
-                            if (cadena.Equals("cadena"))
+                            if (str1.Equals("cadena"))
                                 return "STRING";
-                            if (cadena.Equals("booleano"))
+                            if (str1.Equals("booleano"))
                                 return "BOOLEANO";
-                            if (cadena.Equals("caracter"))
+                            if (str1.Equals("caracter"))
                                 return "CHAR";
 
                             return "RESERVADO";
                         }
                         else{
-                            if (cadena.Equals("verdadero"))
+                            if (str1.Equals("verdadero"))
                                 return "BOOLEANO";
-                            if (cadena.Equals("falso"))
+                            if (str1.Equals("falso"))
                                 return "BOOLEANO";
-                            if (cadena.Length == 1)
+                            if (str1.Length == 1)
                                 return "CHAR";
                         }
                         return "CADENA";
@@ -165,6 +192,8 @@ namespace IDEProject
                     return "OPERADORES";
                 }
             }
+
+            index = i;
             return "NO VALIDO";
         }
 
@@ -194,7 +223,6 @@ namespace IDEProject
             alf.Add("E");
             alf.Add("R");
             alf.Add("F");
-
 
             this.buildAutomata(estados, acep, alf);
             setEmpties();
