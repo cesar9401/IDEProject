@@ -23,10 +23,12 @@ namespace IDEProject
         private List<String> alfabeto = new List<String>();
         //Palabras reservadas
         private List<String> reservadas;
+        private List<String> operadores;
 
         public Automata()
         {
             setAutomata();
+            setReservadas();
         }
 
         public void buildAutomata(int numeroEstados, List<int> estadosA, List<String> alfabeto)
@@ -43,11 +45,7 @@ namespace IDEProject
         {
             reservadas = new List<String>()
             {
-                "entero",
-                "decimal",
-                "cadena",
-                "booleano",
-                "caracter",
+                "entero", "decimal", "cadena", "booleano", "caracter",
                 "SI",
                 "SINO",
                 "SINO_SI",
@@ -56,6 +54,11 @@ namespace IDEProject
                 "DESDE",
                 "HASTA",
                 "INCREMENTO"
+            };
+
+            operadores = new List<String>()
+            {
+                "+", "-", "*", "/", "++", "--", ">", "<", ">=", "<=", "==", "!=", "||", "&&", "!", "(", ")", "=", "; "
             };
         }
 
@@ -121,21 +124,64 @@ namespace IDEProject
                     case 5:
                         return "DECIMAL";
                     case 6:
+                        if (reservadas.Contains(cadena))
+                        {
+                            if (cadena.Equals("entero"))
+                                return "ENTERO";
+                            if (cadena.Equals("decimal"))
+                                return "DECIMAL";
+                            if (cadena.Equals("cadena"))
+                                return "STRING";
+                            if (cadena.Equals("booleano"))
+                                return "BOOLEANO";
+                            if (cadena.Equals("caracter"))
+                                return "CHAR";
+
+                            return "RESERVADO";
+                        }
+                        else{
+                            if (cadena.Equals("verdadero"))
+                                return "BOOLEANO";
+                            if (cadena.Equals("falso"))
+                                return "BOOLEANO";
+                            if (cadena.Length == 1)
+                                return "CHAR";
+                        }
                         return "CADENA";
+                    case 9:
+                        return "COMENTARIO";
+                    case 12:
+                        return "COMENTARIO";
+                    case 13:
+                        return "FIN";
+                }
+
+                if(q == 7 || q == 8)
+                {
+                    if (operadores.Contains(cadena))
+                        if (cadena.Equals("=") || cadena.Equals(";"))
+                            return "OPERADORES_FS";
+                    
+                    return "OPERADORES";
                 }
             }
-
             return "NO VALIDO";
         }
 
         public void setAutomata()
         {
-            int estados = 7;
+            int estados = 15;
             List<int> acep = new List<int>();
             acep.Add(2);
             acep.Add(3);
             acep.Add(5);
             acep.Add(6);
+            acep.Add(7);
+            acep.Add(8);
+            acep.Add(9);
+            acep.Add(12);
+            acep.Add(13);
+            
             List<String> alf = new List<String>();
             alf.Add("L");
             alf.Add("N");
@@ -145,6 +191,10 @@ namespace IDEProject
             alf.Add("D");
             alf.Add("P");
             alf.Add("U");
+            alf.Add("E");
+            alf.Add("R");
+            alf.Add("F");
+
 
             this.buildAutomata(estados, acep, alf);
             setEmpties();
@@ -158,6 +208,7 @@ namespace IDEProject
             setTransiciones(1, 5, 1);
             setTransiciones(1, 6, 1);
             setTransiciones(1, 7, 1);
+            setTransiciones(1, 8, 1);
 
             //Numeros
             setTransiciones(0, 1, 3);
@@ -171,6 +222,32 @@ namespace IDEProject
             setTransiciones(6, 0, 6);
             setTransiciones(6, 1, 6);
             setTransiciones(6, 7, 6);
+
+            //Operadores
+            setTransiciones(0, 2, 8);
+            setTransiciones(0, 4, 8);
+            setTransiciones(0, 5, 7);
+            setTransiciones(7, 2, 8);
+            setTransiciones(8, 2, 8);
+
+            //Comentarios
+            setTransiciones(7, 4, 10);
+            setTransiciones(7, 5, 9);
+            for(int i=0; i<alf.Count-2; i++)
+            {
+                setTransiciones(9, i, 9);
+                setTransiciones(10, i, 10);
+                setTransiciones(11, i, 10);
+            }
+            setTransiciones(10, 4, 11);
+            setTransiciones(11, 5, 12);
+
+            //Fin Sentencia
+            setTransiciones(0, 8, 13);
+            setTransiciones(0, 9, 14);
+            setTransiciones(13, 8, 13);
+            setTransiciones(13, 9, 14);
+            setTransiciones(14, 10, 13);
         }
 
         private void setEmpties()

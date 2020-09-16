@@ -15,38 +15,29 @@ namespace IDEProject
         {
             this.code = code;
             if (IsNumber())
-            {
                 return "N";
-            }
-            else if (IsLetter())
-            {
+            if (IsLetter())
                 return "L";
-            } 
-            else if (isDoubleQuotes())
-            {
+            if (isDoubleQuotes())
                 return "C";
-            }
-            else if(IsAsterisk())
-            {
+            if(IsAsterisk())
                 return "A";
-            }
-            else if (isDiagonal())
-            {
+            if (isDiagonal())
                 return "D";
-            }
-            else if (IsPoint()){
+            if (IsPoint())
                 return "P";
-            }
-            else if (IsSymbol())
-            {
+            if (IsSymbol())
                 return "S";
-            }
-            else if (isUnderscore())
-            {
+            if (isUnderscore())
                 return "U";
-            }
+            if (IsSpace())
+                return "E";
+            if (isEnterKey())
+                return "R";
+            if (isFinalLine())
+                return "F";
            
-            return "E";
+            return "Ex";
         }
 
         public Boolean IsNumber() 
@@ -61,7 +52,7 @@ namespace IDEProject
 
         public Boolean IsSymbol()
         {
-            return (code>=32 && code <=126 && !IsNumber() && !IsLetter()) && !IsPoint() && !IsAsterisk() && !isDiagonal() && !isDoubleQuotes() && !isUnderscore() || code==191;
+            return (code>32 && code <=126 && !IsNumber() && !IsLetter()) && !IsPoint() && !IsAsterisk() && !isDiagonal() && !isDoubleQuotes() && !isUnderscore() || code == 191;
         }
 
         public Boolean IsPoint()
@@ -97,6 +88,11 @@ namespace IDEProject
         public Boolean isEnterKey()
         {
             return code == 13;
+        }
+
+        public Boolean IsSpace()
+        {
+            return code == 32;
         }
     }
 }

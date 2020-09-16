@@ -36,13 +36,8 @@ namespace IDEProject
         private void newFile_Click(object sender, RoutedEventArgs e)
         {
             consoleText.Document.Blocks.Clear();
-            path = null; 
+            path = null;
             this.Title = "NoteC";
-            /**
-            String content = StringFromRichTextBox();
-            String str = "queso";
-            paintText(content, str, consoleText.Document.ContentStart);
-            */
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -121,7 +116,7 @@ namespace IDEProject
             }
         }
 
-        private void paintText(String content, String str, TextPointer pos0)
+        private void paintText(String content, String str, TextPointer pos0, SolidColorBrush color)
         {
             int i = 0;
             TextPointer posF = consoleText.Document.ContentEnd;
@@ -135,7 +130,7 @@ namespace IDEProject
             {
                 index = aux.IndexOf(str);
                 aux = content.Substring(0, index);
-                MessageBox.Show("aux: " + aux);
+                //MessageBox.Show("aux: " + aux);
                 if(text.Length != 0)
                 {
                     range.Text = aux;
@@ -145,12 +140,12 @@ namespace IDEProject
                     paint(aux, Brushes.White, pos0);
                 }
                 pos0 = consoleText.Document.ContentEnd;
-                paint(str, Brushes.DarkOrange, pos0);
+                paint(str, color, pos0);
                 paint("", Brushes.White, pos0);
 
                 i = index + str.Length;
                 aux = content.Substring(i, content.Length - i);
-                MessageBox.Show("aux: " + aux);
+                //MessageBox.Show("aux: " + aux);
                 if (!aux.Contains(str))
                 {
                     //paint(aux.Substring(0, aux.IndexOf(str)), Brushes.White);
@@ -161,7 +156,7 @@ namespace IDEProject
                 }
                 else
                 {
-                    paintText(aux, str, pos0);
+                    paintText(aux, str, pos0, color);
                 }
 
             }
@@ -193,14 +188,6 @@ namespace IDEProject
             rangeOfText1.ApplyPropertyValue(TextElement.ForegroundProperty, color);
         }
 
-        private void cursorPosition()
-        {
-            TextPointer pos = consoleText.CaretPosition;
-            pos = consoleText.CaretPosition.GetPositionAtOffset(20);
-            pos = pos.DocumentEnd;
-            consoleText.CaretPosition = pos;
-        }
-
         string StringFromRichTextBox()
         {
             TextRange textRange = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
@@ -220,6 +207,8 @@ namespace IDEProject
         private void keyUp(object sender, KeyEventArgs e)
         {
             getLines();
+            TextRange range = new TextRange(consoleText.CaretPosition, consoleText.CaretPosition);
+            range.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
             //paintText();
         }
 
@@ -250,7 +239,6 @@ namespace IDEProject
             //analizarCadena();
 
             //Eliminar enter and final line
-
             String cadena = StringFromRichTextBox();
             cadena = cadena.Remove(cadena.Length - 2, 2);
 
@@ -259,8 +247,38 @@ namespace IDEProject
             String estado = aut.verificarCadena();
             labelCadena.Content = estado;
 
-            //int cod = (int)'\"';
-            //MessageBox.Show("Code: " + cod);
+            SolidColorBrush color = Brushes.White;
+            switch (estado) 
+            {
+                case "COMENTARIO":
+                    color = Brushes.Red;
+                    break;
+                case "STRING":
+                    color = Brushes.Gray;
+                    break;
+                case "ENTERO":
+                    color = Brushes.Purple;
+                    break;
+                case "DECIMAL":
+                    color = Brushes.LightBlue;
+                    break;
+                case "BOOLEANO":
+                    color = Brushes.DarkOrange;
+                    break;
+                case "CHAR":
+                    color = Brushes.Brown;
+                    break;
+                case "RESERVADO":
+                    color = Brushes.Green;
+                    break;
+                case "OPERADORES":
+                    color = Brushes.DarkBlue;
+                    break;
+                case "OPERADORES_FS":
+                    color = Brushes.Pink;
+                    break;
+            }
+            paintText(cadena, cadena, consoleText.Document.ContentStart, color);
         }
     }
 }
