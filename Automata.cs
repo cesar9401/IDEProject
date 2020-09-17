@@ -61,7 +61,7 @@ namespace IDEProject
 
             operadores = new List<String>()
             {
-                "+", "-", "*", "/", "++", "--", ">", "<", ">=", "<=", "==", "!=", "||", "&&", "!", "(", ")", "=", "; "
+                "+", "-", "*", "/", "++", "--", ">", "<", ">=", "<=", "==", "!=", "||", "&&", "!", "(", ")", "=", ";"
             };
         }
 
@@ -72,6 +72,7 @@ namespace IDEProject
                 estados.Add(i);
             }
         }
+
 
         public void setTransiciones(int x, int y, int q)
         {
@@ -185,11 +186,13 @@ namespace IDEProject
 
                 if(q == 7 || q == 8)
                 {
-                    if (operadores.Contains(cadena))
-                        if (cadena.Equals("=") || cadena.Equals(";"))
-                            return "OPERADORES_FS";
-                    
-                    return "OPERADORES";
+                    String str1 = cadena.Substring(0, index);
+                    if (str1.Equals("=") || str1.Equals(";"))
+                        return "OPERADORES_FS";
+                    if (operadores.Contains(str1))
+                        return "OPERADORES";
+
+                    return "NO VALIDO";
                 }
             }
 

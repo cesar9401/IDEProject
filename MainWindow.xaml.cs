@@ -51,7 +51,7 @@ namespace IDEProject
             {
                 OpenFileDialog open = new OpenFileDialog();
                 open.Title = "Abrir";
-                open.Filter = "css files (*.css)|*.css";
+                open.Filter = "gt files (*.gt)|*.gt";
                 open.ShowDialog();
 
                 if (File.Exists(open.FileName))
@@ -77,7 +77,7 @@ namespace IDEProject
             {
                 SaveFileDialog forSave = new SaveFileDialog();
                 forSave.Title = "Guardar";
-                forSave.Filter = "css files (*.css)|*.css";
+                forSave.Filter = "gt files (*.gt)|*.gt";
                 if (path != null)
                 {
                     if (path.Length != 0)
@@ -240,25 +240,18 @@ namespace IDEProject
 
             //Eliminar enter and final line
             String cadena = StringFromRichTextBox();
-            //cadena = cadena.Remove(cadena.Length - 2, 2);
 
             Automata aut = new Automata();
             aut.str = cadena;
             List<Token> tokens = aut.verificarCadena();
 
-            /*
-            labelCadena.Content = tokens[0].type;
-            String estado = tokens[0].type;
-            String word = tokens[0].cadena;
-            MessageBox.Show("Len: " + tokens[0].cadena.Length);
-            */
             TextRange range = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
             range.Text = "";
 
             for (int i=0; i<tokens.Count; i++)
             {
                 String estado = tokens[i].type;
-                MessageBox.Show(estado);
+                //MessageBox.Show(estado);
                 String word = tokens[i].cadena;
                 SolidColorBrush color = Brushes.White;
                 switch (estado)
