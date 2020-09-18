@@ -36,6 +36,7 @@ namespace IDEProject
         private void newFile_Click(object sender, RoutedEventArgs e)
         {
             consoleText.Document.Blocks.Clear();
+            reportText.Document.Blocks.Clear();
             path = null;
             this.Title = "NoteC";
         }
@@ -59,7 +60,9 @@ namespace IDEProject
                     path = open.FileName;
                     TextReader read = new StreamReader(path);
                     consoleText.Document.Blocks.Clear();
-                    consoleText.Document.Blocks.Add(new Paragraph(new Run(read.ReadToEnd())));
+                    TextRange range = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
+                    range.Text = read.ReadToEnd();
+                    //consoleText.Document.Blocks.Add(new Paragraph(new Run(read.ReadToEnd())));
                     read.Close();
 
                     this.Title = path + " - NoteC";
@@ -158,7 +161,6 @@ namespace IDEProject
                 {
                     paintText(aux, str, pos0, color);
                 }
-
             }
         }
 
@@ -217,18 +219,6 @@ namespace IDEProject
             //getLines();
         }
 
-        private void analizarCadena() 
-        {
-            String cadena = StringFromRichTextBox();
-            for(int i=0; i<cadena.Length; i++)
-            {
-                String ch = cadena.Substring(i, 1);
-                char c = Convert.ToChar(ch);
-                int index = (int)c;
-                MessageBox.Show("index: " + index);
-            }
-        }
-
         private void MouseClick(object sender, MouseButtonEventArgs e)
         {
             getLines();
@@ -236,24 +226,21 @@ namespace IDEProject
 
         private void Compilar_Click(object sender, RoutedEventArgs e)
         {
-            //analizarCadena();
-
-            //Eliminar enter and final line
             String cadena = StringFromRichTextBox();
 
             Automata aut = new Automata();
             aut.str = cadena;
             List<Token> tokens = aut.verificarCadena();
+            labelCadena.Content = "Tokens: " + contarTokens(tokens);
 
-            TextRange range = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
-            range.Text = "";
+            consoleText.Document.Blocks.Clear();
 
             for (int i=0; i<tokens.Count; i++)
             {
                 String estado = tokens[i].type;
-                //MessageBox.Show(estado);
                 String word = tokens[i].cadena;
-                SolidColorBrush color = Brushes.White;
+                SolidColorBrush color = Brushes.GreenYellow;
+                //MessageBox.Show(estado);
                 switch (estado)
                 {
                     case "COMENTARIO":
@@ -283,10 +270,61 @@ namespace IDEProject
                     case "OPERADORES_FS":
                         color = Brushes.Pink;
                         break;
+                    case "NO VALIDO":
+                        color = Brushes.Black;
+                        break;
                 }
                 paint(word, color, consoleText.Document.ContentEnd);
             }
+        }
 
+        private int contarTokens(List<Token> tokens)
+        {
+            int count = 0;
+            int errores = 0;
+            for (int i = 0; i < tokens.Count; i++)
+            {
+                if (!tokens[i].type.Equals("FIN"))
+                {
+                    if(tokens[i].type.Equals("NO VALIDO"))
+                    {
+                        errores++;
+                    }
+                    else
+                    {
+                        count++;
+                    }
+                }
+
+
+
+            }
+            reportText.Document.Blocks.Clear();
+            reportText.AppendText(path);
+            reportText.AppendText("\nCantidad de errores: " + errores);
+            reportText.AppendText("\nCantidad de tokens: " + count);
+
+            return count;
+        }
+
+        private void saveReport_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog forSave = new SaveFileDialog();
+            forSave.Title = "Save Report - NoteC";
+            forSave.Filter = "gtE files (*.gtE)|*.gtE";
+            TextRange range = new TextRange(reportText.Document.ContentStart, reportText.Document.ContentEnd);
+            if (forSave.ShowDialog() == true)
+            {
+                if (forSave.FileName != null)
+                {
+                    String pathR = forSave.FileName;
+                    StreamWriter save = File.CreateText(pathR);
+                    String text = range.Text;
+                    save.Write(text);
+                    save.Flush();
+                    save.Close();
+                }
+            }
         }
     }
 }

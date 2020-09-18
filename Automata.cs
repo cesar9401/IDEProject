@@ -114,11 +114,11 @@ namespace IDEProject
             {
                 int code = (int)Convert.ToChar(cadena.Substring(i, 1));
                 String whatIs = leng.WhatIs(code);
-                int index = alfabeto.IndexOf(whatIs);
+                int j = alfabeto.IndexOf(whatIs);
                 try
                 {
                     q0 = q;
-                    q = trans[q, index];
+                    q = trans[q, j];
                 }
                 catch (Exception)
                 {
@@ -126,14 +126,28 @@ namespace IDEProject
                     return "SIGMA";
                 }
 
-                if(q == -1)
+                
+                if (q == 8)
+                {
+                    if (i == 1 && cadena.Length > 2)
+                    {
+                        String st = cadena.Substring(0, i+1);
+                        if (!operadores.Contains(st))
+                        {
+                            break;
+                        }
+                    }
+                }
+                
+
+                if (q == -1)
                 {
                     q = q0;
-                    index = i;
                     break;
                 }
             }
 
+            index = i;
             if(q == -1)
             {
                 return "ERROR";
@@ -141,7 +155,6 @@ namespace IDEProject
 
             if (estadosA.Contains(q))
             {
-                index = i;
                 switch (q)
                 {
                     case 2:
@@ -192,11 +205,11 @@ namespace IDEProject
                     if (operadores.Contains(str1))
                         return "OPERADORES";
 
+
                     return "NO VALIDO";
                 }
             }
 
-            index = i;
             return "NO VALIDO";
         }
 
