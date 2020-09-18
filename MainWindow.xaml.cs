@@ -35,10 +35,7 @@ namespace IDEProject
 
         private void newFile_Click(object sender, RoutedEventArgs e)
         {
-            consoleText.Document.Blocks.Clear();
-            reportText.Document.Blocks.Clear();
-            path = null;
-            this.Title = "NoteC";
+            AllClear();
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -62,16 +59,35 @@ namespace IDEProject
                     consoleText.Document.Blocks.Clear();
                     TextRange range = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
                     range.Text = read.ReadToEnd();
-                    //consoleText.Document.Blocks.Add(new Paragraph(new Run(read.ReadToEnd())));
                     read.Close();
 
                     this.Title = path + " - NoteC";
+
+                    if (!isOpen(path))
+                    {
+                        treeViewDirectory.Items.Add(path);
+                    }
                 }
             }
             catch (Exception)
             {
                 MessageBox.Show("Error al abrir");
             }
+        }
+
+        private Boolean isOpen(String path)
+        {
+            Boolean isOpen = false;
+            for(int i=0; i<treeViewDirectory.Items.Count; i++)
+            {
+                if (treeViewDirectory.Items[i].ToString().Equals(path))
+                {
+                    isOpen = true;
+                    break;
+                }
+            }
+
+            return isOpen;
         }
 
         private void saveFile_Click(object sender, RoutedEventArgs e)
@@ -109,6 +125,7 @@ namespace IDEProject
                             path = pathF;
 
                             this.Title = path + " - NoteC";
+                            treeViewDirectory.Items.Add(path);
                         }
                     }
                 }
@@ -116,51 +133,6 @@ namespace IDEProject
             catch (Exception)
             {
                 MessageBox.Show("No se ha podido guardar el archivo");
-            }
-        }
-
-        private void paintText(String content, String str, TextPointer pos0, SolidColorBrush color)
-        {
-            int i = 0;
-            TextPointer posF = consoleText.Document.ContentEnd;
-            TextRange range = new TextRange(pos0, posF);
-            String text = range.Text;
-
-            String aux = content;
-            //String str = "queso";
-            int index = 0;
-            if(aux.Contains(str))
-            {
-                index = aux.IndexOf(str);
-                aux = content.Substring(0, index);
-                //MessageBox.Show("aux: " + aux);
-                if(text.Length != 0)
-                {
-                    range.Text = aux;
-                }
-                else
-                {
-                    paint(aux, Brushes.White, pos0);
-                }
-                pos0 = consoleText.Document.ContentEnd;
-                paint(str, color, pos0);
-                paint("", Brushes.White, pos0);
-
-                i = index + str.Length;
-                aux = content.Substring(i, content.Length - i);
-                //MessageBox.Show("aux: " + aux);
-                if (!aux.Contains(str))
-                {
-                    //paint(aux.Substring(0, aux.IndexOf(str)), Brushes.White);
-
-                    paint(aux, Brushes.White, pos0);
-                    paint("", Brushes.White, pos0);
-                    consoleText.CaretPosition = pos0;
-                }
-                else
-                {
-                    paintText(aux, str, pos0, color);
-                }
             }
         }
 
@@ -295,9 +267,6 @@ namespace IDEProject
                         count++;
                     }
                 }
-
-
-
             }
             reportText.Document.Blocks.Clear();
             reportText.AppendText(path);
@@ -324,6 +293,85 @@ namespace IDEProject
                     save.Flush();
                     save.Close();
                 }
+            }
+        }
+
+        private void delete_Click(object sender, RoutedEventArgs e)
+        {
+            var obj = treeViewDirectory.SelectedItem;
+            if (obj != null)
+            {
+                String name = obj.ToString();
+                treeViewDirectory.Items.Remove(obj);
+                if (name.Equals(path))
+                {
+                    AllClear();
+                }
+                try
+                {
+                    File.Delete(name);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Error al eliminar archivo");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Debe seleccionar un archivo");
+            }
+        }
+
+        private void closeButton_Click(object sender, RoutedEventArgs e)
+        {
+            var obj = treeViewDirectory.SelectedItem;
+            if(obj != null)
+            {
+                String name = obj.ToString();
+                treeViewDirectory.Items.Remove(obj);
+                if (name.Equals(path))
+                {
+                    AllClear();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Debe seleccionar un archivo");
+            }
+        }
+
+        private void closeFile_Click(object sender, RoutedEventArgs e)
+        {
+            AllClear();
+        }
+
+        private void AllClear()
+        {
+            consoleText.Document.Blocks.Clear();
+            reportText.Document.Blocks.Clear();
+            path = null;
+            this.Title = "NoteC";
+        }
+
+        private void open_Click(object sender, RoutedEventArgs e)
+        {
+            var obj = treeViewDirectory.SelectedItem;
+            if (obj != null)
+            {
+                String name = obj.ToString();
+                AllClear();
+                path = name;
+                TextReader read = new StreamReader(path);
+                consoleText.Document.Blocks.Clear();
+                TextRange range = new TextRange(consoleText.Document.ContentStart, consoleText.Document.ContentEnd);
+                range.Text = read.ReadToEnd();
+                read.Close();
+
+                this.Title = path + " - NoteC";
+            }
+            else
+            {
+                MessageBox.Show("Debe seleccionar un archivo");
             }
         }
     }

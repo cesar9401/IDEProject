@@ -125,7 +125,6 @@ namespace IDEProject
                     MessageBox.Show("Error: " + whatIs);
                     return "SIGMA";
                 }
-
                 
                 if (q == 8)
                 {
@@ -138,7 +137,6 @@ namespace IDEProject
                         }
                     }
                 }
-                
 
                 if (q == -1)
                 {
