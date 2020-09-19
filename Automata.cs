@@ -135,6 +135,11 @@ namespace IDEProject
                         {
                             break;
                         }
+                        else
+                        {
+                            i++;
+                            break;
+                        }
                     }
                 }
 
@@ -281,6 +286,10 @@ namespace IDEProject
                 setTransiciones(10, i, 10);
                 setTransiciones(11, i, 10);
             }
+            //Comentario entre lineas
+            setTransiciones(10, 9, 10);
+            setTransiciones(10, 10, 10);
+
             setTransiciones(10, 4, 11);
             setTransiciones(11, 5, 12);
 
