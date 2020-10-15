@@ -61,7 +61,7 @@ namespace IDEProject
 
             operadores = new List<String>()
             {
-                "+", "-", "*", "/", "++", "--", ">", "<", ">=", "<=", "==", "!=", "||", "&&", "!", "(", ")", "=", ";"
+                "+", "-", "*", "/", "++", "--", ">", "<", ">=", "<=", "==", "!=", "||", "&&", "!", "(", ")", "=", ";", "{", "}"
             };
         }
 
@@ -191,7 +191,7 @@ namespace IDEProject
                             if (str1.Length == 1)
                                 return "CHAR";
                         }
-                        return "CADENA";
+                        return "id";
                     case 9:
                         return "COMENTARIO";
                     case 12:
