@@ -48,7 +48,7 @@ namespace IDEProject
         {
             reservadas = new List<String>()
             {
-                "entero", "decimal", "cadena", "booleano", "caracter",
+                "entero", "decimal", "cadena", "booleano", "caracter", "principal",
                 "SI",
                 "SINO",
                 "SINO_SI",
@@ -161,7 +161,7 @@ namespace IDEProject
                 switch (q)
                 {
                     case 2:
-                        return "STRING";
+                        return "CADENA";
                     case 3:
                         return "ENTERO";
                     case 5:
@@ -171,15 +171,15 @@ namespace IDEProject
                         if (reservadas.Contains(str1))
                         {
                             if (str1.Equals("entero"))
-                                return "ENTERO";
+                                return "entero";
                             if (str1.Equals("decimal"))
-                                return "DECIMAL";
+                                return "decimal";
                             if (str1.Equals("cadena"))
-                                return "STRING";
+                                return "cadena";
                             if (str1.Equals("booleano"))
-                                return "BOOLEANO";
+                                return "booleano";
                             if (str1.Equals("caracter"))
-                                return "CHAR";
+                                return "caracter";
 
                             return "RESERVADO";
                         }

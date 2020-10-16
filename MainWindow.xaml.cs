@@ -1,20 +1,12 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.IO;
-using System.Data.Common;
 
 namespace IDEProject
 {
@@ -205,6 +197,11 @@ namespace IDEProject
             List<Token> tokens = aut.verificarCadena();
             labelCadena.Content = "Tokens: " + contarTokens(tokens);
 
+            //Automata de Pila
+            AutomataPila autP = new AutomataPila();
+            autP.SetTokens(tokens);
+            autP.StartAnalisis();
+
             consoleText.Document.Blocks.Clear();
 
             for (int i=0; i<tokens.Count; i++)
@@ -218,19 +215,34 @@ namespace IDEProject
                     case "COMENTARIO":
                         color = Brushes.Red;
                         break;
-                    case "STRING":
+                    case "CADENA":
+                        color = Brushes.Gray;
+                        break;
+                    case "cadena":
                         color = Brushes.Gray;
                         break;
                     case "ENTERO":
                         color = Brushes.Purple;
                         break;
+                    case "entero":
+                        color = Brushes.Purple;
+                        break;
                     case "DECIMAL":
+                        color = Brushes.LightBlue;
+                        break;
+                    case "decimal":
                         color = Brushes.LightBlue;
                         break;
                     case "BOOLEANO":
                         color = Brushes.DarkOrange;
                         break;
-                    case "CHAR":
+                    case "booleano":
+                        color = Brushes.DarkOrange;
+                        break;
+                    case "CARACTER":
+                        color = Brushes.Brown;
+                        break;
+                    case "caracter":
                         color = Brushes.Brown;
                         break;
                     case "RESERVADO":
