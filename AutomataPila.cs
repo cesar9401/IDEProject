@@ -16,6 +16,7 @@ namespace IDEProject
         private List<String> changes;
         private Stack<String>[,] values;
 
+        //Constructor, construir automata
         public AutomataPila()
         {
             SetTerminales();
@@ -27,6 +28,7 @@ namespace IDEProject
             pila.Push("S");
         }
 
+        //Terminales en tabla de analisis
         private void SetTerminales()
         {
             this.terminales = new List<String>()
@@ -35,6 +37,7 @@ namespace IDEProject
             };
         }
 
+        //Cambios en tabla de analisis
         private void SetChanges()
         {
             this.changes = new List<String>()
@@ -43,23 +46,26 @@ namespace IDEProject
             };
         }
 
+        //Analizar cadena
         public void StartAnalisis()
         {
-            /**
+            //Acciones Shift
             if (terminales.Contains(pila.Peek()))
             {
-                Shift(pila.Peek(), tokens.Peek().cadena);
-            }
-            */
-
-            //Shift
-            while (terminales.Contains(pila.Peek()))
-            {
                 ShowPila();
+                Console.WriteLine("Shift");
                 Shift(pila.Peek(), tokens.Peek());
+                ShowPila();
             }
-            ShowPila();
 
+            //Acciones Reduce
+            if (pila.Peek().Equals("E"))
+            {
+                Console.WriteLine("Reduce E");
+                ShowPila();
+                pila.Pop();
+                ShowPila();
+            }
             String str;
             if (tokens.Peek().type.Equals("FIN"))
             {
@@ -73,16 +79,26 @@ namespace IDEProject
             {
                 str = tokens.Peek().cadena;
             }
-            //Reduce
-            while (str.Equals(pila.Peek()))
+            if (str.Equals(pila.Peek()))
             {
-                ShowPila();    
+                //Reduce
+                Console.WriteLine("Reduce");
+                ShowPila();
                 tokens.Dequeue();
                 pila.Pop();
+                ShowPila();
             }
-            ShowPila();
+
+            if (pila.Peek().Equals("$"))
+            {
+                
+                pila.Pop();
+                ShowPila();
+                Console.WriteLine("Cadena Aceptada");
+            }
         }
 
+        //Mostrar elementos en la pila
         private void ShowPila()
         {
             foreach(String s in pila)
@@ -92,6 +108,7 @@ namespace IDEProject
             Console.WriteLine("");
         }
 
+        //Acciones shift
         private void Shift(String terminal, Token tkn)
         {
             int indexT = terminales.IndexOf(terminal);
@@ -116,6 +133,7 @@ namespace IDEProject
             }
         }
 
+        //Construccion de automata
         private void BuildAutomata()
         {
             //Valores para S
@@ -159,6 +177,7 @@ namespace IDEProject
             values[3, 12].Push("caracter");
         }
 
+        //Se inicializan los tokens
         public void SetTokens(List<Token> tokens)
         {
             this.tokens = new Queue<Token>();

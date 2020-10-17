@@ -16,6 +16,7 @@ namespace IDEProject
     public partial class MainWindow : Window
     {
         private String path;
+        AutomataPila autP = new AutomataPila();
 
         public MainWindow()
         {
@@ -198,9 +199,7 @@ namespace IDEProject
             labelCadena.Content = "Tokens: " + contarTokens(tokens);
 
             //Automata de Pila
-            AutomataPila autP = new AutomataPila();
             autP.SetTokens(tokens);
-            autP.StartAnalisis();
 
             consoleText.Document.Blocks.Clear();
 
@@ -288,6 +287,7 @@ namespace IDEProject
             return count;
         }
 
+        //Acciones guardar reporte
         private void saveReport_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog forSave = new SaveFileDialog();
@@ -308,6 +308,7 @@ namespace IDEProject
             }
         }
 
+        //Acciones boton eliminar
         private void delete_Click(object sender, RoutedEventArgs e)
         {
             var obj = treeViewDirectory.SelectedItem;
@@ -385,6 +386,12 @@ namespace IDEProject
             {
                 MessageBox.Show("Debe seleccionar un archivo");
             }
+        }
+
+        private void analizer_Click(object sender, RoutedEventArgs e)
+        {
+            //Acciones analizar
+            autP.StartAnalisis();
         }
     }
 }

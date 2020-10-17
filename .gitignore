@@ -2,3 +2,4 @@ bin/
 obj/
 .vs/
 *.suo
+/IDEProject/.vs/IDEProject/v16/.suo
