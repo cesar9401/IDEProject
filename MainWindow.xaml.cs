@@ -16,7 +16,7 @@ namespace IDEProject
     public partial class MainWindow : Window
     {
         private String path;
-        AutomataPila autP = new AutomataPila();
+        AutomataPila autP;
 
         public MainWindow()
         {
@@ -199,6 +199,7 @@ namespace IDEProject
             labelCadena.Content = "Tokens: " + contarTokens(tokens);
 
             //Automata de Pila
+            autP = new AutomataPila();
             autP.SetTokens(tokens);
 
             consoleText.Document.Blocks.Clear();

@@ -49,52 +49,67 @@ namespace IDEProject
         //Analizar cadena
         public void StartAnalisis()
         {
-            //Acciones Shift
-            if (terminales.Contains(pila.Peek()))
+            while(pila.Count > 0 && tokens.Count > 0)
             {
-                ShowPila();
-                Console.WriteLine("Shift");
-                Shift(pila.Peek(), tokens.Peek());
-                ShowPila();
+                //Acciones Shift
+                if (terminales.Contains(pila.Peek()))
+                {
+                    ShowPila();
+                    Console.WriteLine("Shift");
+                    Shift(pila.Peek(), tokens.Peek());
+                    ShowPila();
+                }
+
+                //Acciones Reduce
+                if (pila.Peek().Equals("E"))
+                {
+                    ShowPila();
+                    Console.WriteLine("Reduce E");
+                    pila.Pop();
+                    ShowPila();
+                }
+
+                string str;
+                if (tokens.Peek().type.Equals("FIN"))
+                {
+                    str = "FIN";
+                }
+                else if (tokens.Peek().type.Equals("id"))
+                {
+                    str = "id";
+                }
+                else
+                {
+                    str = tokens.Peek().cadena;
+                }
+
+                if (str.Equals(pila.Peek()))
+                {
+                    //Reduce
+                    Console.WriteLine("Reduce");
+                    ShowPila();
+                    tokens.Dequeue();
+                    pila.Pop();
+                    ShowPila();
+                }
+
+                //Aceptacion
+                if (pila.Peek().Equals("$"))
+                {
+                    pila.Pop();
+                    ShowPila();
+                }
             }
 
-            //Acciones Reduce
-            if (pila.Peek().Equals("E"))
+            if(pila.Count == 0 && tokens.Count == 0)
             {
-                Console.WriteLine("Reduce E");
-                ShowPila();
-                pila.Pop();
-                ShowPila();
-            }
-            String str;
-            if (tokens.Peek().type.Equals("FIN"))
-            {
-                str = "FIN";
-            }
-            else if (tokens.Peek().type.Equals("id"))
-            {
-                str = "id";
+                Console.WriteLine("Pila Vacia -> Cadena Aceptada");
             }
             else
             {
-                str = tokens.Peek().cadena;
-            }
-            if (str.Equals(pila.Peek()))
-            {
-                //Reduce
-                Console.WriteLine("Reduce");
-                ShowPila();
-                tokens.Dequeue();
-                pila.Pop();
-                ShowPila();
-            }
-
-            if (pila.Peek().Equals("$"))
-            {
-                
-                pila.Pop();
-                ShowPila();
-                Console.WriteLine("Cadena Aceptada");
+                Console.WriteLine("Cadena no aceptada");
+                Console.WriteLine("Pila -> " + pila.Count);
+                Console.WriteLine("Tokens -> " + tokens.Count);
             }
         }
 
@@ -126,10 +141,31 @@ namespace IDEProject
             }
             int indexC = changes.IndexOf(str);
 
-            pila.Pop();
-            foreach(String t in values[indexT, indexC])
+            Console.WriteLine("indexT: " + indexT);
+            Console.WriteLine("indexC: " + indexC);
+            if (indexT != -1 && indexC != -1)
             {
-                pila.Push(t);
+                if(values[indexT, indexC] != null)
+                {
+                    pila.Pop();
+                    foreach (String t in values[indexT, indexC])
+                    {
+                        pila.Push(t);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Lenguaje no reconocido");
+                    Console.WriteLine("Eliminar token: " + tokens.Peek().cadena + " tipo: " + tokens.Peek().type);
+                    tokens.Dequeue();
+                }
+
+            }
+            else
+            {
+                Console.WriteLine("Alfabeto no reconocido");
+                Console.WriteLine("Eliminar token: " + tokens.Peek().cadena + " tipo: " + tokens.Peek().type);
+                tokens.Dequeue();
             }
         }
 
