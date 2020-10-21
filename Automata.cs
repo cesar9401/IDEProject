@@ -90,15 +90,22 @@ namespace IDEProject
         public List<Token> verificarCadena()
         {
             String cadena = str;
+            int row = 1;
 
             while(cadena.Length > 0)
             {
                 String type = CheckSubString(cadena);
                 String content = cadena.Substring(0, index);
-                cadena = cadena.Substring(index);
-                //MessageBox.Show(cadena + " len: " + cadena.Length);
 
-                tokens.Add(new Token(type, content));
+                cadena = cadena.Substring(index);
+
+                tokens.Add(new Token(type, content, row));
+                row = type.Equals("FIN") ? row + 1 : row;
+            }
+
+            foreach (Token t in tokens)
+            {
+                Console.WriteLine("Tipo: " + t.type + ", cadena: " + t.cadena + ", row: " + t.row);
             }
 
             return tokens;
@@ -126,7 +133,7 @@ namespace IDEProject
                     return "SIGMA";
                 }
                 
-                if (q == 8)
+                if (q == 9)
                 {
                     if (i == 1 && cadena.Length > 2)
                     {
@@ -166,7 +173,7 @@ namespace IDEProject
                         return "ENTERO";
                     case 5:
                         return "DECIMAL";
-                    case 6:
+                    case 7:
                         String str1 = cadena.Substring(0, index);
                         if (reservadas.Contains(str1))
                         {
@@ -191,16 +198,22 @@ namespace IDEProject
                             if (str1.Length == 1)
                                 return "CHAR";
                         }
-                        return "id";
-                    case 9:
-                        return "COMENTARIO";
-                    case 12:
+                        if(str1.StartsWith("_"))
+                            return "id";
+
+                        return "TEXTO";
+
+                    case 10:
                         return "COMENTARIO";
                     case 13:
+                        return "COMENTARIO";
+                    case 15:
                         return "FIN";
+                    case 16:
+                        return "ESPACIO";
                 }
 
-                if(q == 7 || q == 8)
+                if(q == 8 || q == 9)
                 {
                     String str1 = cadena.Substring(0, index);
                     if (str1.Equals("=") || str1.Equals(";"))
@@ -218,18 +231,19 @@ namespace IDEProject
 
         public void setAutomata()
         {
-            int estados = 15;
+            int estados = 17;
             List<int> acep = new List<int>();
             acep.Add(2);
             acep.Add(3);
             acep.Add(5);
-            acep.Add(6);
             acep.Add(7);
             acep.Add(8);
             acep.Add(9);
-            acep.Add(12);
+            acep.Add(10);
             acep.Add(13);
-            
+            acep.Add(15);
+            acep.Add(16);
+
             List<String> alf = new List<String>();
             alf.Add("L");
             alf.Add("N");
@@ -264,41 +278,43 @@ namespace IDEProject
             setTransiciones(4, 1, 5);
             setTransiciones(5, 1, 5);
 
-            //Cadenas
-            setTransiciones(0, 0, 6);
-            setTransiciones(6, 0, 6);
-            setTransiciones(6, 1, 6);
-            setTransiciones(6, 7, 6);
+            //Cadenas - identificadores
+            setTransiciones(0, 0, 7);
+            setTransiciones(0, 7, 6);
+            setTransiciones(6, 0, 7);
+            setTransiciones(7, 0, 7);
+            setTransiciones(7, 1, 7);
+            setTransiciones(7, 7, 7);
 
             //Operadores
-            setTransiciones(0, 2, 8);
-            setTransiciones(0, 4, 8);
-            setTransiciones(0, 5, 7);
-            setTransiciones(7, 2, 8);
-            setTransiciones(8, 2, 8);
+            setTransiciones(0, 2, 9);
+            setTransiciones(0, 4, 9);
+            setTransiciones(0, 5, 8);
+            setTransiciones(8, 2, 9);
+            setTransiciones(9, 2, 9);
 
             //Comentarios
-            setTransiciones(7, 4, 10);
-            setTransiciones(7, 5, 9);
+            setTransiciones(8, 4, 11);
+            setTransiciones(8, 5, 10);
             for(int i=0; i<alf.Count-2; i++)
             {
-                setTransiciones(9, i, 9);
                 setTransiciones(10, i, 10);
-                setTransiciones(11, i, 10);
+                setTransiciones(11, i, 11);
+                setTransiciones(12, i, 11);
             }
             //Comentario entre lineas
-            setTransiciones(10, 9, 10);
-            setTransiciones(10, 10, 10);
+            setTransiciones(11, 9, 11);
+            setTransiciones(11, 10, 11);
 
-            setTransiciones(10, 4, 11);
-            setTransiciones(11, 5, 12);
+            setTransiciones(11, 4, 12);
+            setTransiciones(12, 5, 13);
 
-            //Fin Sentencia
-            setTransiciones(0, 8, 13);
+            //Espacio
+            setTransiciones(0, 8, 16);
+
+            //Salto Linea
             setTransiciones(0, 9, 14);
-            setTransiciones(13, 8, 13);
-            setTransiciones(13, 9, 14);
-            setTransiciones(14, 10, 13);
+            setTransiciones(14, 10, 15);
         }
 
         private void setEmpties()

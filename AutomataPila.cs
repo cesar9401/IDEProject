@@ -70,9 +70,9 @@ namespace IDEProject
                 }
 
                 string str;
-                if (tokens.Peek().type.Equals("FIN"))
+                if (tokens.Peek().type.Equals("ESPACIO"))
                 {
-                    str = "FIN";
+                    str = "ESPACIO";
                 }
                 else if (tokens.Peek().type.Equals("id"))
                 {
@@ -91,6 +91,11 @@ namespace IDEProject
                     tokens.Dequeue();
                     pila.Pop();
                     ShowPila();
+                }
+                else
+                {
+                    Console.WriteLine("No se encontro en la pila");
+                    Console.WriteLine("Hacer break...");
                 }
 
                 //Aceptacion
@@ -128,9 +133,9 @@ namespace IDEProject
         {
             int indexT = terminales.IndexOf(terminal);
             String str;
-            if(tkn.type.Equals("FIN"))
+            if(tkn.type.Equals("ESPACIO"))
             {
-                str = "FIN";
+                str = "ESPACIO";
             } else if (tkn.type.Equals("id"))
             {
                 str = "id";
@@ -196,7 +201,7 @@ namespace IDEProject
             {
                 values[2, i] = new Stack<string>();
                 values[2, i].Push("T");
-                values[2, i].Push("FIN");
+                values[2, i].Push("ESPACIO");
                 values[2, i].Push("id");
                 values[2, i].Push(";");
             }
@@ -221,7 +226,7 @@ namespace IDEProject
             {
                 this.tokens.Enqueue(t);
             }
-            this.tokens.Enqueue(new Token("$", "$"));
+            this.tokens.Enqueue(new Token("$", "$", 0));
         }
     }
 }

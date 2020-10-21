@@ -10,11 +10,13 @@ namespace IDEProject
     {
         public String type { get; set; }
         public String cadena { get; set; }
+        public int row { get; set; }
 
-        public Token(String type, String cadena)
+        public Token(String type, String cadena, int row)
         {
             this.type = type;
             this.cadena = cadena;
+            this.row = row;
         }
     }
 }
