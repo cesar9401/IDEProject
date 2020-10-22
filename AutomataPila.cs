@@ -33,7 +33,7 @@ namespace IDEProject
         {
             this.terminales = new List<String>()
             {
-                "S", "A", "B", "T"
+                "S", "A", "B", "C", "T"
             };
         }
 
@@ -42,73 +42,79 @@ namespace IDEProject
         {
             this.changes = new List<String>()
             {
-                "principal", "(", ")", "{", "}", " ","id", ";", "entero", "decimal", "cadena", "booleano", "caracter", "$"
+                "principal", "(", ")", "{", "}", "id", ",", ";", "entero", "decimal", "cadena", "booleano", "caracter", "$"
             };
         }
 
         //Analizar cadena
         public void StartAnalisis()
         {
-            while(pila.Count > 0 && tokens.Count > 0)
+            Boolean acept = true;
+            ShowPila();
+            while (pila.Count > 0 && tokens.Count > 0)
             {
                 //Acciones Shift
                 if (terminales.Contains(pila.Peek()))
                 {
-                    ShowPila();
-                    Console.WriteLine("Shift");
+                    Console.WriteLine("Shift " + pila.Peek());
                     Shift(pila.Peek(), tokens.Peek());
                     ShowPila();
                 }
-
-                //Acciones Reduce
-                if (pila.Peek().Equals("E"))
-                {
-                    ShowPila();
-                    Console.WriteLine("Reduce E");
-                    pila.Pop();
-                    ShowPila();
-                }
-
-                string str;
-                if (tokens.Peek().type.Equals("ESPACIO"))
-                {
-                    str = "ESPACIO";
-                }
-                else if (tokens.Peek().type.Equals("id"))
-                {
-                    str = "id";
-                }
                 else
                 {
-                    str = tokens.Peek().cadena;
-                }
+                    //Acciones Reduce E
+                    if (pila.Peek().Equals("E"))
+                    {
+                        Console.WriteLine("Reduce E");
+                        pila.Pop();
+                        ShowPila();
+                    }
+                    else
+                    {
+                        // Acciones para Reduce
+                        string str;
+                        if (tokens.Peek().type.Equals("id"))
+                        {
+                            str = "id";
+                        }
+                        else
+                        {
+                            str = tokens.Peek().cadena;
+                        }
 
-                if (str.Equals(pila.Peek()))
-                {
-                    //Reduce
-                    Console.WriteLine("Reduce");
-                    ShowPila();
-                    tokens.Dequeue();
-                    pila.Pop();
-                    ShowPila();
-                }
-                else
-                {
-                    Console.WriteLine("No se encontro en la pila");
-                    Console.WriteLine("Hacer break...");
-                }
-
-                //Aceptacion
-                if (pila.Peek().Equals("$"))
-                {
-                    pila.Pop();
-                    ShowPila();
+                        if (str.Equals(pila.Peek()))
+                        {
+                            //Reduce
+                            Console.WriteLine("Reduce " + pila.Peek());
+                            tokens.Dequeue();
+                            pila.Pop();
+                            ShowPila();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Se esperaba: " + pila.Peek());
+                            Console.WriteLine("No es posible hacer reduce");
+                            ShowNextToken();
+                            tokens.Dequeue();
+                            pila.Pop();
+                            ShowPila();
+                            ShowNextToken();
+                            acept = false;
+                        }
+                    }
                 }
             }
 
             if(pila.Count == 0 && tokens.Count == 0)
             {
-                Console.WriteLine("Pila Vacia -> Cadena Aceptada");
+                if(acept)
+                {
+                    Console.WriteLine("Pila Vacia -> Cadena Aceptada");
+                }
+                else
+                {
+                    Console.WriteLine("Error");
+                }
             }
             else
             {
@@ -128,15 +134,21 @@ namespace IDEProject
             Console.WriteLine("");
         }
 
+        //Mostrar el siguiente token
+        private void ShowNextToken()
+        {
+            if(tokens.Count > 0)
+            {
+                Console.WriteLine("Siguiente token -> Tipo: " + tokens.Peek().type + ", cadena: " + tokens.Peek().cadena + ", row: " + tokens.Peek().row + ", col: " + tokens.Peek().col);
+            }
+        }
+
         //Acciones shift
         private void Shift(String terminal, Token tkn)
         {
             int indexT = terminales.IndexOf(terminal);
             String str;
-            if(tkn.type.Equals("ESPACIO"))
-            {
-                str = "ESPACIO";
-            } else if (tkn.type.Equals("id"))
+            if (tkn.type.Equals("id"))
             {
                 str = "id";
             }
@@ -146,8 +158,7 @@ namespace IDEProject
             }
             int indexC = changes.IndexOf(str);
 
-            Console.WriteLine("indexT: " + indexT);
-            Console.WriteLine("indexC: " + indexC);
+
             if (indexT != -1 && indexC != -1)
             {
                 if(values[indexT, indexC] != null)
@@ -168,9 +179,12 @@ namespace IDEProject
             }
             else
             {
+                Console.WriteLine("indexT: " + indexT);
+                Console.WriteLine("indexC: " + indexC);
+
                 Console.WriteLine("Alfabeto no reconocido");
                 Console.WriteLine("Eliminar token: " + tokens.Peek().cadena + " tipo: " + tokens.Peek().type);
-                tokens.Dequeue();
+                //tokens.Dequeue();
             }
         }
 
@@ -201,21 +215,34 @@ namespace IDEProject
             {
                 values[2, i] = new Stack<string>();
                 values[2, i].Push("T");
-                values[2, i].Push("ESPACIO");
                 values[2, i].Push("id");
+                values[2, i].Push("C");
                 values[2, i].Push(";");
             }
 
-            //Valores para T
-            for(int i = 8; i<13; i++)
+            //Valores para C
+            values[3, 4] = new Stack<string>();
+            values[3, 4].Push("E");
+            values[3, 6] = new Stack<string>();
+            values[3, 6].Push(",");
+            values[3, 6].Push("id");
+            values[3, 6].Push("C");
+            for(int i = 7 ; i < 13; i++)
             {
                 values[3, i] = new Stack<string>();
+                values[3, i].Push("E");
             }
-            values[3, 8].Push("entero");
-            values[3, 9].Push("decimal");
-            values[3, 10].Push("cadena");
-            values[3, 11].Push("booleano");
-            values[3, 12].Push("caracter");
+
+            //Valores para T
+            for (int i = 8; i<13; i++)
+            {
+                values[4, i] = new Stack<string>();
+            }
+            values[4, 8].Push("entero");
+            values[4, 9].Push("decimal");
+            values[4, 10].Push("cadena");
+            values[4, 11].Push("booleano");
+            values[4, 12].Push("caracter");
         }
 
         //Se inicializan los tokens
@@ -224,9 +251,12 @@ namespace IDEProject
             this.tokens = new Queue<Token>();
             foreach(Token t in tokens)
             {
-                this.tokens.Enqueue(t);
+                if (!t.type.Equals("FIN") && !t.type.Equals("ESPACIO") && !t.type.Equals("COMENTARIO"))
+                {
+                    this.tokens.Enqueue(t);
+                }
             }
-            this.tokens.Enqueue(new Token("$", "$", 0));
+            this.tokens.Enqueue(new Token("$", "$", 0, 0));
         }
     }
 }

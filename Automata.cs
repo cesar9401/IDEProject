@@ -61,7 +61,7 @@ namespace IDEProject
 
             operadores = new List<String>()
             {
-                "+", "-", "*", "/", "++", "--", ">", "<", ">=", "<=", "==", "!=", "||", "&&", "!", "(", ")", "=", ";", "{", "}"
+                "+", "-", "*", "/", "++", "--", ">", "<", ">=", "<=", "==", "!=", "||", "&&", "!", "(", ")", "=", ";", "{", "}", ","
             };
         }
 
@@ -91,21 +91,28 @@ namespace IDEProject
         {
             String cadena = str;
             int row = 1;
+            int col = 0;
 
             while(cadena.Length > 0)
             {
                 String type = CheckSubString(cadena);
                 String content = cadena.Substring(0, index);
-
+                
                 cadena = cadena.Substring(index);
 
-                tokens.Add(new Token(type, content, row));
-                row = type.Equals("FIN") ? row + 1 : row;
+                tokens.Add(new Token(type, content, row, col));
+                
+                col += content.Length;
+                if (type.Equals("FIN"))
+                {
+                    row++;
+                    col = 0;
+                }
             }
 
             foreach (Token t in tokens)
             {
-                Console.WriteLine("Tipo: " + t.type + ", cadena: " + t.cadena + ", row: " + t.row);
+                Console.WriteLine("Tipo: " + t.type + ", cadena: " + t.cadena + ", row: " + t.row + ", col: " + t.col);
             }
 
             return tokens;
