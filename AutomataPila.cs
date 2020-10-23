@@ -25,7 +25,11 @@ namespace IDEProject
             BuildAutomata();
             pila = new Stack<String>();
             pila.Push("$");
-            pila.Push("S");
+            //pila.Push("S");
+            foreach(String t in values[0, 0])
+            {
+                pila.Push(t);
+            }
         }
 
         //Terminales en tabla de analisis
@@ -95,6 +99,7 @@ namespace IDEProject
                             Console.WriteLine("Se esperaba: " + pila.Peek());
                             Console.WriteLine("No es posible hacer reduce");
                             ShowNextToken();
+                            //Pasar al siguiente token
                             tokens.Dequeue();
                             pila.Pop();
                             ShowPila();
@@ -171,20 +176,20 @@ namespace IDEProject
                 }
                 else
                 {
-                    Console.WriteLine("Lenguaje no reconocido");
-                    Console.WriteLine("Eliminar token: " + tokens.Peek().cadena + " tipo: " + tokens.Peek().type);
-                    tokens.Dequeue();
+                    Console.WriteLine("indexT: " + indexT);
+                    Console.WriteLine("indexC: " + indexC);
+                    
+                    Console.WriteLine("Pop en pila: " + pila.Peek());
+                    pila.Pop();
                 }
-
             }
             else
             {
                 Console.WriteLine("indexT: " + indexT);
                 Console.WriteLine("indexC: " + indexC);
 
-                Console.WriteLine("Alfabeto no reconocido");
                 Console.WriteLine("Eliminar token: " + tokens.Peek().cadena + " tipo: " + tokens.Peek().type);
-                //tokens.Dequeue();
+                tokens.Dequeue();
             }
         }
 
