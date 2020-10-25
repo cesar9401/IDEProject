@@ -48,7 +48,7 @@ namespace IDEProject
         {
             reservadas = new List<String>()
             {
-                "entero", "decimal", "cadena", "booleano", "caracter", "principal",
+                "entero", "decimal", "cadena", "booleano", "caracter", "principal", "imprimir", "leer",
                 "SI",
                 "SINO",
                 "SINO_SI",
