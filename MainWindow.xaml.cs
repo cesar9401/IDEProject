@@ -266,6 +266,7 @@ namespace IDEProject
         {
             int count = 0;
             int errores = 0;
+            String errors = "";
             for (int i = 0; i < tokens.Count; i++)
             {
                 if (!tokens[i].type.Equals("FIN"))
@@ -273,6 +274,7 @@ namespace IDEProject
                     if(tokens[i].type.Equals("NO VALIDO"))
                     {
                         errores++;
+                        errors += "Error fila: " + tokens[i].row + ", columna: " + tokens[i].col + ", cadena: " + tokens[i].cadena + "\n";
                     }
                     else
                     {
@@ -282,8 +284,9 @@ namespace IDEProject
             }
             reportText.Document.Blocks.Clear();
             reportText.AppendText(path);
-            reportText.AppendText("\nCantidad de errores: " + errores);
+            reportText.AppendText("Cantidad de errores: " + errores);
             reportText.AppendText("\nCantidad de tokens: " + count);
+            reportText.AppendText("\n" + errors);
 
             return count;
         }
@@ -393,6 +396,12 @@ namespace IDEProject
         {
             //Acciones analizar
             autP.StartAnalisis();
+            List<String> reports = autP.reports;
+            reportText.AppendText("Errores de Compilacion:");
+            foreach (String t in reports)
+            {
+                reportText.AppendText("\n" + t);
+            }
         }
     }
 }

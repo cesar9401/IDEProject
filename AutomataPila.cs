@@ -15,10 +15,13 @@ namespace IDEProject
         private List<String> terminales;
         private List<String> changes;
         private Stack<String>[,] values;
+        public List<String> reports;
 
         //Constructor, construir automata
         public AutomataPila()
         {
+            reports = new List<String>();
+            
             SetTerminales();
             SetChanges();
             this.values = new Stack<String>[this.terminales.Count, this.changes.Count];
@@ -89,6 +92,7 @@ namespace IDEProject
                         else
                         {
                             Console.WriteLine("Se esperaba: " + pila.Peek());
+                            reports.Add("Error Sintactico: Fila: " + tokens.Peek().row + ", Columna: " + tokens.Peek().col + ", se ha encontrado: " + tokens.Peek().type + ", se esperaba: " + pila.Peek());
                             Console.WriteLine("No es posible hacer reduce");
                             ShowNextToken();
                             //Pasar al siguiente token
