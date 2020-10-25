@@ -175,6 +175,8 @@ namespace IDEProject
                 switch (q)
                 {
                     case 2:
+                        if (cadena.Substring(0, index).Length == 3)
+                            return "CARACTER";
                         return "CADENA";
                     case 3:
                         return "ENTERO";

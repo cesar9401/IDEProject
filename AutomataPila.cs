@@ -37,7 +37,7 @@ namespace IDEProject
         {
             this.terminales = new List<String>()
             {
-                "S", "A", "B", "C", "T"
+                "S", "A", "B", "EN", "EN'", "DEC", "DEC'", "CAD", "CAD'", "BOL", "BOL'", "CAR", "CAR'"
             };
         }
 
@@ -46,7 +46,7 @@ namespace IDEProject
         {
             this.changes = new List<String>()
             {
-                "principal", "(", ")", "{", "}", "id", ",", ";", "entero", "decimal", "cadena", "booleano", "caracter", "$"
+                "principal", "(", ")", "{", "}", "id", "=", ",", ";", "entero", "decimal", "cadena", "booleano", "caracter", "ENTERO", "DECIMAL", "CADENA", "BOOLEANO", "CARACTER", "$"
             };
         }
 
@@ -76,15 +76,7 @@ namespace IDEProject
                     else
                     {
                         // Acciones para Reduce
-                        string str;
-                        if (tokens.Peek().type.Equals("id"))
-                        {
-                            str = "id";
-                        }
-                        else
-                        {
-                            str = tokens.Peek().cadena;
-                        }
+                        string str = GetString(tokens.Peek());
 
                         if (str.Equals(pila.Peek()))
                         {
@@ -152,17 +144,7 @@ namespace IDEProject
         private void Shift(String terminal, Token tkn)
         {
             int indexT = terminales.IndexOf(terminal);
-            String str;
-            if (tkn.type.Equals("id"))
-            {
-                str = "id";
-            }
-            else
-            {
-                str = tkn.cadena;
-            }
-            int indexC = changes.IndexOf(str);
-
+            int indexC = changes.IndexOf(GetString(tkn));
 
             if (indexT != -1 && indexC != -1)
             {
@@ -193,6 +175,20 @@ namespace IDEProject
             }
         }
 
+        private String GetString(Token tkn)
+        {
+            if(tkn.type.Equals("OPERADORES") || tkn.type.Equals("OPERADORES_FS"))
+            {
+                return tkn.cadena;
+            }
+            else
+            {
+                if (tkn.cadena.Equals("principal"))
+                    return "principal";
+                return tkn.type;
+            }
+        }
+
         //Construccion de automata
         private void BuildAutomata()
         {
@@ -208,7 +204,7 @@ namespace IDEProject
             //Valores para A
             values[1, 4] = new Stack<string>();
             values[1, 4].Push("E");
-            for (int i = 8; i < 13; i++) 
+            for (int i = 9; i < 14; i++) 
             {
                 values[1, i] = new Stack<string>();
                 values[1, i].Push("B");
@@ -216,38 +212,79 @@ namespace IDEProject
             }
 
             //Valores para B
-            for (int i = 8; i < 13; i++)
+            for (int i = 9; i < 14; i++)
             {
                 values[2, i] = new Stack<string>();
-                values[2, i].Push("T");
+            }
+            values[2, 9].Push("entero");
+            values[2, 10].Push("decimal");
+            values[2, 11].Push("cadena");
+            values[2, 12].Push("booleano");
+            values[2, 13].Push("caracter");
+            for (int i = 9; i < 14; i++)
+            {
                 values[2, i].Push("id");
-                values[2, i].Push("C");
+            }
+
+            values[2, 9].Push("EN");
+            values[2, 10].Push("DEC");
+            values[2, 11].Push("CAD");
+            values[2, 12].Push("BOL");
+            values[2, 13].Push("CAR");
+
+            for (int i = 9; i < 14; i++)
+            {
                 values[2, i].Push(";");
             }
 
-            //Valores para C
-            values[3, 4] = new Stack<string>();
-            values[3, 4].Push("E");
-            values[3, 6] = new Stack<string>();
-            values[3, 6].Push(",");
-            values[3, 6].Push("id");
-            values[3, 6].Push("C");
-            for(int i = 7 ; i < 13; i++)
+            //Valores para COL -> 6
+            for (int i = 3; i < 12; i+=2)
             {
-                values[3, i] = new Stack<string>();
-                values[3, i].Push("E");
+                values[i, 6] = new Stack<string>();
+                values[i, 6].Push("=");
             }
+            values[3, 6].Push("ENTERO");
+            values[3, 6].Push("EN'");
+            values[5, 6].Push("DECIMAL");
+            values[5, 6].Push("DEC'");
+            values[7, 6].Push("CADENA");
+            values[7, 6].Push("CAD'");
+            values[9, 6].Push("BOOLEANO");
+            values[9, 6].Push("BOL'");
+            values[11, 6].Push("CARACTER");
+            values[11, 6].Push("CAR'");
 
-            //Valores para T
-            for (int i = 8; i<13; i++)
+            //Valores para COL --> 7
+            for (int i = 3; i < 13; i++)
             {
-                values[4, i] = new Stack<string>();
+                values[i, 7] = new Stack<string>();
+                if (i % 2 == 0)
+                {
+                    values[i, 7].Push(",");
+                    values[i, 7].Push("id");
+                }
             }
-            values[4, 8].Push("entero");
-            values[4, 9].Push("decimal");
-            values[4, 10].Push("cadena");
-            values[4, 11].Push("booleano");
-            values[4, 12].Push("caracter");
+            values[3, 7].Push("EN'");
+            values[4, 7].Push("EN");
+
+            values[5, 7].Push("DEC'");
+            values[6, 7].Push("DEC");
+
+            values[7, 7].Push("CAD'");
+            values[8, 7].Push("CAD");
+
+            values[9, 7].Push("BOL'");
+            values[10, 7].Push("BOL");
+
+            values[11, 7].Push("CAR'");
+            values[12, 7].Push("CAR");
+
+            //Valores para COL --> 8
+            for(int i=3; i<13; i++)
+            {
+                values[i, 8] = new Stack<string>();
+                values[i, 8].Push("E");
+            }
         }
 
         //Se inicializan los tokens
