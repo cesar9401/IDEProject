@@ -274,7 +274,7 @@ namespace IDEProject
                     if(tokens[i].type.Equals("NO VALIDO"))
                     {
                         errores++;
-                        errors += "Error fila: " + tokens[i].row + ", columna: " + tokens[i].col + ", cadena: " + tokens[i].cadena + "\n";
+                        errors += "Error Lexico: fila: " + tokens[i].row + ", columna: " + tokens[i].col + ", cadena: " + tokens[i].cadena + "\n";
                     }
                     else
                     {
@@ -284,7 +284,7 @@ namespace IDEProject
             }
             reportText.Document.Blocks.Clear();
             reportText.AppendText(path);
-            reportText.AppendText("Cantidad de errores: " + errores);
+            reportText.AppendText("\nCantidad de errores: " + errores);
             reportText.AppendText("\nCantidad de tokens: " + count);
             reportText.AppendText("\n" + errors);
 

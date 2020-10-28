@@ -61,7 +61,8 @@ namespace IDEProject
 
             operadores = new List<String>()
             {
-                "+", "-", "*", "/", "++", "--", ">", "<", ">=", "<=", "==", "!=", "||", "&&", "!", "(", ")", "=", ";", "{", "}", ","
+                "+", "-", "*", "/", "++", "--", ">", "<", ">=", "<=", "==", "!=", "||", "&&", "!", "(", ")", "=", ";", "{", "}", ",",
+                "+=", "-=", "*=", "/="
             };
         }
 
@@ -225,7 +226,7 @@ namespace IDEProject
                 if(q == 8 || q == 9)
                 {
                     String str1 = cadena.Substring(0, index);
-                    if (str1.Equals("=") || str1.Equals(";"))
+                    if (str1.Equals("=") || str1.Equals(";") || str1.Equals("+=") || str1.Equals("-=") || str1.Equals("*=") || str1.Equals("/="))
                         return "OPERADORES_FS";
                     if (operadores.Contains(str1))
                         return "OPERADORES";

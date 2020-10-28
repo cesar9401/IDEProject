@@ -16,12 +16,13 @@ namespace IDEProject
         private List<String> changes;
         private Stack<String>[,] values;
         public List<String> reports;
+        private Boolean acept;
+
 
         //Constructor, construir automata
         public AutomataPila()
         {
             reports = new List<String>();
-            
             SetTerminales();
             SetChanges();
             this.values = new Stack<String>[this.terminales.Count, this.changes.Count];
@@ -33,6 +34,7 @@ namespace IDEProject
             {
                 pila.Push(t);
             }
+            this.acept = true;
         }
 
         //Terminales en tabla de analisis
@@ -56,7 +58,6 @@ namespace IDEProject
         //Analizar cadena
         public void StartAnalisis()
         {
-            Boolean acept = true;
             ShowPila();
             while (pila.Count > 0 && tokens.Count > 0)
             {
@@ -92,7 +93,7 @@ namespace IDEProject
                         else
                         {
                             Console.WriteLine("Se esperaba: " + pila.Peek());
-                            reports.Add("Error Sintactico: Fila: " + tokens.Peek().row + ", Columna: " + tokens.Peek().col + ", se ha encontrado: " + tokens.Peek().type + ", se esperaba: " + pila.Peek());
+                            reports.Add("Error Sintactico: Fila: " + tokens.Peek().row + ", Columna: " + tokens.Peek().col + ", se ha encontrado: " + tokens.Peek().type + "(" + tokens.Peek().cadena + "), se esperaba: " + pila.Peek());
                             Console.WriteLine("No es posible hacer reduce");
                             ShowNextToken();
                             //Pasar al siguiente token
@@ -100,7 +101,7 @@ namespace IDEProject
                             pila.Pop();
                             ShowPila();
                             ShowNextToken();
-                            acept = false;
+                            this.acept = false;
                         }
                     }
                 }
@@ -110,6 +111,7 @@ namespace IDEProject
             {
                 if(acept)
                 {
+                    reports.Add("No se encontro ningun error sintactico, codigo fuente aceptado.");
                     Console.WriteLine("Pila Vacia -> Cadena Aceptada");
                 }
                 else
@@ -167,15 +169,17 @@ namespace IDEProject
                     
                     Console.WriteLine("Pop en pila: " + pila.Peek());
                     pila.Pop();
+                    this.acept = false;
                 }
             }
             else
             {
                 Console.WriteLine("indexT: " + indexT);
                 Console.WriteLine("indexC: " + indexC);
-
                 Console.WriteLine("Eliminar token: " + tokens.Peek().cadena + " tipo: " + tokens.Peek().type);
+                reports.Add("Error Sintactico: Fila: " + tokens.Peek().row + ", Columna: " + tokens.Peek().col + ", se ha encontrado: " + tokens.Peek().type + "(" + tokens.Peek().cadena + "), no es posible reconocer el token.");
                 tokens.Dequeue();
+                this.acept = false;
             }
         }
 
@@ -295,8 +299,8 @@ namespace IDEProject
             //Valores para COL --> 7
             for(int i=3; i<13; i++)
             {
-                values[i, 8] = new Stack<string>();
-                values[i, 8].Push("E");
+                values[i, 7] = new Stack<string>();
+                values[i, 7].Push("E");
             }
 
             //Valores para R
