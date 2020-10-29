@@ -26,6 +26,7 @@ namespace IDEProject
             SetTerminales();
             SetChanges();
             this.values = new Stack<String>[this.terminales.Count, this.changes.Count];
+            InitValues();
             BuildAutomata();
             pila = new Stack<String>();
             pila.Push("$");
@@ -37,12 +38,26 @@ namespace IDEProject
             this.acept = true;
         }
 
+        //Iniciarlizar las casillas de la matriz
+        private void InitValues()
+        {
+            for(int i=0; i<values.GetLength(0); i++)
+            {
+                for(int j=0; j<values.GetLongLength(1); j++)
+                {
+                    values[i, j] = new Stack<string>();
+                }
+            }
+        }
+
+
         //Terminales en tabla de analisis
         private void SetTerminales()
         {
             this.terminales = new List<String>()
             {
-                "S", "A", "B", "EN", "EN'", "DEC", "DEC'", "CAD", "CAD'", "BOL", "BOL'", "CAR", "CAR'", "R", "W", "T", "T'"
+                "S", "A", "B", "EN", "EN'", "DEC", "DEC'", "CAD", "CAD'", "BOL", "BOL'", "CAR", "CAR'", "R", "W", "K", "K'",
+                "B'", "AS", "X", "X'", "T", "T'", "P", "P'", "U", "N", "I", "I'", "C", "C'", "LOG", "COM", "OC", "OL"
             };
         }
 
@@ -51,7 +66,8 @@ namespace IDEProject
         {
             this.changes = new List<String>()
             {
-                "principal", "(", ")", "{", "}", "=", ",", ";", "+", "id", "entero", "decimal", "cadena", "booleano", "caracter", "leer", "imprimir", "ENTERO", "DECIMAL", "CADENA", "BOOLEANO", "CARACTER", "$"
+                "principal", "(", ")", "{", "}", "=", ",", ";", "+", "-", "*", "/", "^", "++", "--", "&&", "||", ">=", "<=", ">", "<", "==", "!=", "!", "+=", "-=", "*=", "/=", "id", 
+                "entero", "decimal", "cadena", "booleano", "caracter", "leer", "imprimir", "ENTERO", "DECIMAL", "CADENA", "BOOLEANO", "CARACTER", "SI", "SINO_SI", "SINO", "$"
             };
         }
 
@@ -154,7 +170,8 @@ namespace IDEProject
 
             if (indexT != -1 && indexC != -1)
             {
-                if(values[indexT, indexC] != null)
+                //values[indexT, indexC] != null
+                if(values[indexT, indexC].Count > 0)
                 {
                     pila.Pop();
                     foreach (String t in values[indexT, indexC])
@@ -199,7 +216,7 @@ namespace IDEProject
         private void BuildAutomata()
         {
             //Valores para S
-            values[0, 0] = new Stack<String>();
+            //values[0, 0] = new Stack<String>();
             values[0, 0].Push("principal");
             values[0, 0].Push("(");
             values[0, 0].Push(")");
@@ -208,48 +225,45 @@ namespace IDEProject
             values[0, 0].Push("}");
 
             //Valores para A
-            values[1, 4] = new Stack<string>();
+            //values[1, 4] = new Stack<string>();
             values[1, 4].Push("E");
-            for (int i = 10; i < 17; i++) 
-            {
-                values[1, i] = new Stack<string>();
-                if (i == 15)
-                {
-                    values[1, i].Push("R");
-                }
-                else if (i == 16)
-                {
-                    values[1, i].Push("W");
-                }
-                else
-                {
-                    values[1, i].Push("B");
-                }
-                values[1, i].Push("A");
-            }
+            values[1, 28].Push("B'");
+            values[1, 28].Push("A");
+            values[1, 29].Push("B");
+            values[1, 29].Push("A");
+            values[1, 30].Push("B");
+            values[1, 30].Push("A");
+            values[1, 31].Push("B");
+            values[1, 31].Push("A");
+            values[1, 32].Push("B");
+            values[1, 32].Push("A");
+            values[1, 33].Push("B");
+            values[1, 33].Push("A");
+            values[1, 34].Push("R");
+            values[1, 34].Push("A");
+            values[1, 35].Push("W");
+            values[1, 35].Push("A");
+            values[1, 41].Push("I");
+            values[1, 41].Push("A");
 
             //Valores para B
-            for (int i = 10; i < 15; i++)
-            {
-                values[2, i] = new Stack<string>();
-            }
-            values[2, 10].Push("entero");
-            values[2, 11].Push("decimal");
-            values[2, 12].Push("cadena");
-            values[2, 13].Push("booleano");
-            values[2, 14].Push("caracter");
-            for (int i = 10; i < 15; i++)
+            values[2, 29].Push("entero");
+            values[2, 30].Push("decimal");
+            values[2, 31].Push("cadena");
+            values[2, 32].Push("booleano");
+            values[2, 33].Push("caracter");
+            for (int i = 29; i < 34; i++)
             {
                 values[2, i].Push("id");
             }
 
-            values[2, 10].Push("EN");
-            values[2, 11].Push("DEC");
-            values[2, 12].Push("CAD");
-            values[2, 13].Push("BOL");
-            values[2, 14].Push("CAR");
+            values[2, 29].Push("EN");
+            values[2, 30].Push("DEC");
+            values[2, 31].Push("CAD");
+            values[2, 32].Push("BOL");
+            values[2, 33].Push("CAR");
 
-            for (int i = 10; i < 15; i++)
+            for (int i = 29; i < 34; i++)
             {
                 values[2, i].Push(";");
             }
@@ -257,12 +271,12 @@ namespace IDEProject
             //Valores para COL -> 5
             for (int i = 3; i < 12; i+=2)
             {
-                values[i, 5] = new Stack<string>();
+                //values[i, 5] = new Stack<string>();
                 values[i, 5].Push("=");
             }
-            values[3, 5].Push("ENTERO");
+            values[3, 5].Push("X");
             values[3, 5].Push("EN'");
-            values[5, 5].Push("DECIMAL");
+            values[5, 5].Push("X");
             values[5, 5].Push("DEC'");
             values[7, 5].Push("CADENA");
             values[7, 5].Push("CAD'");
@@ -299,52 +313,247 @@ namespace IDEProject
             //Valores para COL --> 7
             for(int i=3; i<13; i++)
             {
-                values[i, 7] = new Stack<string>();
+                //values[i, 7] = new Stack<string>();
                 values[i, 7].Push("E");
             }
 
             //Valores para R
-            values[13, 15] = new Stack<string>();
-            values[13, 15].Push("leer");
-            values[13, 15].Push("(");
-            values[13, 15].Push("id");
-            values[13, 15].Push(")");
-            values[13, 15].Push(";");
+            //values[13, 15] = new Stack<string>();
+            values[13, 34].Push("leer");
+            values[13, 34].Push("(");
+            values[13, 34].Push("id");
+            values[13, 34].Push(")");
+            values[13, 34].Push(";");
 
             //Valores para W
-            values[14, 16] = new Stack<string>();
-            values[14, 16].Push("imprimir");
-            values[14, 16].Push("(");
-            values[14, 16].Push("T");
-            values[14, 16].Push(")");
-            values[14, 16].Push(";");
+            values[14, 35] = new Stack<string>();
+            values[14, 35].Push("imprimir");
+            values[14, 35].Push("(");
+            values[14, 35].Push("T");
+            values[14, 35].Push(")");
+            values[14, 35].Push(";");
+
+            //Valores para K
+            values[15, 28].Push("id");
+            values[15, 28].Push("K'");
+
+            values[15, 36].Push("ENTERO");
+            values[15, 37].Push("DECIMAL");
+            values[15, 38].Push("CADENA");
+            values[15, 39].Push("BOOLEANO");
+            values[15, 40].Push("CARACTER");
+
+            for (int i = 36; i < 41; i++)
+            {
+                values[15, i].Push("K'");
+            }
+
+            //Valores para K'
+            values[16, 2].Push("E");
+            values[16, 8].Push("+");
+            values[16, 8].Push("K");
+
+            //Valores para B'
+            values[17, 28].Push("id");
+            values[17, 28].Push("AS");
+
+            //Valores para AS
+            values[18, 5].Push("=");
+            values[18, 5].Push("X");
+            values[18, 13].Push("++");
+            values[18, 14].Push("--");
+
+            values[18, 24].Push("+=");
+            values[18, 24].Push("X");
+            values[18, 25].Push("-=");
+            values[18, 25].Push("X");
+            values[18, 26].Push("*=");
+            values[18, 26].Push("X");
+            values[18, 27].Push("/=");
+            values[18, 27].Push("X");
+
+            //Valores para X
+            values[19, 1].Push("T");
+            values[19, 1].Push("X'");
+            values[19, 9].Push("T");
+            values[19, 9].Push("X'");
+            values[19, 28].Push("T");
+            values[19, 28].Push("X'");
+            values[19, 36].Push("T");
+            values[19, 36].Push("X'");
+            values[19, 37].Push("T");
+            values[19, 37].Push("X'");
+
+            //Valores para X'
+            for (int i = 4; i < 8; i++)
+            {
+                values[20, i].Push("E");
+            }
+            values[20, 8].Push("+");
+            values[20, 8].Push("T");
+            values[20, 9].Push("-");
+            values[20, 9].Push("T");
+            for(int i=28; i<36; i++)
+            {
+                values[20, i].Push("E");
+            }
+            values[20, 41].Push("E");
 
             //Valores para T
-            values[15, 9] = new Stack<string>();
-            values[15, 9].Push("id");
-            values[15, 9].Push("T'");
-
-            for (int i=17; i<22; i++)
-            {
-                values[15, i] = new Stack<string>();
-            }
-            values[15, 17].Push("ENTERO");
-            values[15, 18].Push("DECIMAL");
-            values[15, 19].Push("CADENA");
-            values[15, 20].Push("BOOLEANO");
-            values[15, 21].Push("CARACTER");
-
-            for (int i = 17; i < 22; i++)
-            {
-                values[15, i].Push("T'");
-            }
+            values[21, 1].Push("P");
+            values[21, 1].Push("T'");
+            values[21, 9].Push("P");
+            values[21, 9].Push("T'");
+            values[21, 28].Push("P");
+            values[21, 28].Push("T'");
+            values[21, 36].Push("P");
+            values[21, 36].Push("T'");
+            values[21, 37].Push("P");
+            values[21, 37].Push("T'");
 
             //Valores para T'
-            values[16, 2] = new Stack<string>();
-            values[16, 2].Push("E");
-            values[16, 8] = new Stack<string>();
-            values[16, 8].Push("+");
-            values[16, 8].Push("T");
+            for (int i = 4; i < 10; i++)
+            {
+                values[22, i].Push("E");
+            }
+            values[22, 10].Push("*");
+            values[22, 10].Push("P");
+            values[22, 11].Push("/");
+            values[22, 11].Push("P");
+            for (int i = 28; i < 36; i++)
+            {
+                values[22, i].Push("E");
+            }
+            values[22, 41].Push("E");
+
+            //Valores para P
+            values[23, 1].Push("U");
+            values[23, 1].Push("P'");
+            values[23, 9].Push("U");
+            values[23, 9].Push("P'");
+            values[23, 28].Push("U");
+            values[23, 28].Push("P'");
+            values[23, 36].Push("U");
+            values[23, 36].Push("P'");
+            values[23, 37].Push("U");
+            values[23, 37].Push("P'");
+
+            //Valores para P'
+            //values[24, 7].Push("E");
+            for (int i=4; i<12; i++)
+            {
+                values[24, i].Push("E");
+            }
+            values[24, 12].Push("^");
+            values[24, 12].Push("P");
+            for (int i = 28; i < 36; i++)
+            {
+                values[24, i].Push("E");
+            }
+            values[24, 41].Push("E");
+
+            //Valores para U
+            values[25, 1].Push("N");
+            values[25, 9].Push("-N");
+            values[25, 9].Push("N");
+            values[25, 28].Push("N");
+            values[25, 36].Push("N");
+            values[25, 37].Push("N");
+
+            //Valores para N
+            values[26, 1].Push("(");
+            values[26, 1].Push("X");
+            values[26, 1].Push(")");
+            values[26, 28].Push("id");
+            values[26, 36].Push("ENTERO");
+            values[26, 37].Push("DECIMAL");
+
+            //Valores para I
+            values[27, 41].Push("SI");
+            values[27, 41].Push("(");
+            values[27, 41].Push("C");
+            values[27, 41].Push(")");
+            values[27, 41].Push("{");
+            values[27, 41].Push("A");
+            values[27, 41].Push("}");
+            values[27, 41].Push("I'");
+
+            //Valores para I'
+            values[28, 4].Push("E");
+            for(int i=28; i<36; i++)
+            {
+                values[28, i].Push("E");
+            }
+            values[28, 41].Push("E");
+
+            values[28, 42].Push("SINO_SI");
+            values[28, 42].Push("(");
+            values[28, 42].Push("C");
+            values[28, 42].Push(")");
+            values[28, 42].Push("{");
+            values[28, 42].Push("A");
+            values[28, 42].Push("}");
+            values[28, 42].Push("I'");
+
+            values[28, 43].Push("SINO");
+            values[28, 43].Push("{");
+            values[28, 43].Push("A");
+            values[28, 43].Push("}");
+
+            //Valores para C
+            values[29, 1].Push("LOG");
+            values[29, 1].Push("OL");
+            values[29, 2].Push("E");
+            values[29, 9].Push("LOG");
+            values[29, 9].Push("OL");
+
+            values[29, 23].Push("C'");
+            values[29, 23].Push("BOOLEANO");
+            values[29, 23].Push("OL");
+
+            values[29, 28].Push("LOG");
+            values[29, 28].Push("OL");
+            values[29, 36].Push("LOG");
+            values[29, 37].Push("OL");
+            values[29, 36].Push("LOG");
+            values[29, 37].Push("OL");
+
+            //Valores para C'
+            values[30, 23].Push("!");
+            values[30, 23].Push("C'");
+            values[30, 39].Push("E");
+
+            //Valores para LOG
+            values[31, 1].Push("X");
+            values[31, 1].Push("COM");
+            values[31, 9].Push("X");
+            values[31, 9].Push("COM");
+            values[31, 28].Push("X");
+            values[31, 28].Push("COM");
+            values[31, 36].Push("X");
+            values[31, 36].Push("COM");
+            values[31, 37].Push("X");
+            values[31, 37].Push("COM");
+
+            //Valores para COM
+            for(int i=17; i<23; i++)
+            {
+                values[32, i].Push("OC");
+                values[32, i].Push("X");
+            }
+
+            //Valores para OC
+            values[33, 17].Push(">=");
+            values[33, 18].Push("<=");
+            values[33, 19].Push(">");
+            values[33, 20].Push("<");
+            values[33, 21].Push("==");
+            values[33, 22].Push("!=");
+
+            //Valores para OL
+            values[34, 2].Push("E");
+            values[34, 15].Push("&&");
+            values[34, 16].Push("||");
         }
 
         //Se inicializan los tokens
