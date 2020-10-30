@@ -57,7 +57,7 @@ namespace IDEProject
             this.terminales = new List<String>()
             {
                 "S", "A", "B", "EN", "EN'", "DEC", "DEC'", "CAD", "CAD'", "BOL", "BOL'", "CAR", "CAR'", "R", "W", "K", "K'",
-                "B'", "AS", "X", "X'", "T", "T'", "P", "P'", "U", "N", "I", "I'", "C", "C'", "LOG", "COM", "OC", "OL"
+                "B'", "AS", "X", "X'", "T", "T'", "P", "P'", "U", "N", "I", "I'", "C", "C'", "LOG", "COM", "OC", "OL", "M", "H", "F", "A'"
             };
         }
 
@@ -67,7 +67,7 @@ namespace IDEProject
             this.changes = new List<String>()
             {
                 "principal", "(", ")", "{", "}", "=", ",", ";", "+", "-", "*", "/", "^", "++", "--", "&&", "||", ">=", "<=", ">", "<", "==", "!=", "!", "+=", "-=", "*=", "/=", "id", 
-                "entero", "decimal", "cadena", "booleano", "caracter", "leer", "imprimir", "ENTERO", "DECIMAL", "CADENA", "BOOLEANO", "CARACTER", "SI", "SINO_SI", "SINO", "$"
+                "entero", "decimal", "cadena", "booleano", "caracter", "leer", "imprimir", "ENTERO", "DECIMAL", "CADENA", "BOOLEANO", "CARACTER", "SI", "SINO_SI", "SINO", "MIENTRAS", "HACER", "DESDE", "INCREMENTO", "$"
             };
         }
 
@@ -245,6 +245,12 @@ namespace IDEProject
             values[1, 35].Push("A");
             values[1, 41].Push("I");
             values[1, 41].Push("A");
+            values[1, 44].Push("M");
+            values[1, 44].Push("A");
+            values[1, 45].Push("H");
+            values[1, 45].Push("A");
+            values[1, 46].Push("F");
+            values[1, 46 ].Push("A");
 
             //Valores para B
             values[2, 29].Push("entero");
@@ -329,7 +335,7 @@ namespace IDEProject
             values[14, 35] = new Stack<string>();
             values[14, 35].Push("imprimir");
             values[14, 35].Push("(");
-            values[14, 35].Push("T");
+            values[14, 35].Push("K");
             values[14, 35].Push(")");
             values[14, 35].Push(";");
 
@@ -356,6 +362,7 @@ namespace IDEProject
             //Valores para B'
             values[17, 28].Push("id");
             values[17, 28].Push("AS");
+            values[17, 28].Push(";");
 
             //Valores para AS
             values[18, 5].Push("=");
@@ -385,19 +392,19 @@ namespace IDEProject
             values[19, 37].Push("X'");
 
             //Valores para X'
-            for (int i = 4; i < 8; i++)
-            {
-                values[20, i].Push("E");
-            }
+            values[20, 2].Push("E");
+            values[20, 6].Push("E");
+            values[20, 7].Push("E");
             values[20, 8].Push("+");
             values[20, 8].Push("T");
             values[20, 9].Push("-");
             values[20, 9].Push("T");
-            for(int i=28; i<36; i++)
+            for(int i=15; i<23; i++)
             {
                 values[20, i].Push("E");
             }
-            values[20, 41].Push("E");
+
+            values[20, 47].Push("E");
 
             //Valores para T
             values[21, 1].Push("P");
@@ -412,7 +419,8 @@ namespace IDEProject
             values[21, 37].Push("T'");
 
             //Valores para T'
-            for (int i = 4; i < 10; i++)
+            values[22, 2].Push("E");
+            for (int i = 6; i < 10; i++)
             {
                 values[22, i].Push("E");
             }
@@ -420,11 +428,12 @@ namespace IDEProject
             values[22, 10].Push("P");
             values[22, 11].Push("/");
             values[22, 11].Push("P");
-            for (int i = 28; i < 36; i++)
+            for (int i = 15; i < 23; i++)
             {
                 values[22, i].Push("E");
             }
-            values[22, 41].Push("E");
+
+            values[22, 47].Push("E");
 
             //Valores para P
             values[23, 1].Push("U");
@@ -439,22 +448,24 @@ namespace IDEProject
             values[23, 37].Push("P'");
 
             //Valores para P'
-            //values[24, 7].Push("E");
-            for (int i=4; i<12; i++)
+            values[24, 2].Push("E");
+            for (int i=6; i<12; i++)
             {
                 values[24, i].Push("E");
             }
             values[24, 12].Push("^");
             values[24, 12].Push("P");
-            for (int i = 28; i < 36; i++)
+            for (int i = 15; i < 23; i++)
             {
                 values[24, i].Push("E");
             }
-            values[24, 41].Push("E");
+
+            values[24, 47].Push("E");
+
 
             //Valores para U
             values[25, 1].Push("N");
-            values[25, 9].Push("-N");
+            values[25, 9].Push("-");
             values[25, 9].Push("N");
             values[25, 28].Push("N");
             values[25, 36].Push("N");
@@ -514,9 +525,15 @@ namespace IDEProject
             values[29, 28].Push("LOG");
             values[29, 28].Push("OL");
             values[29, 36].Push("LOG");
+            values[29, 36].Push("OL");
+            values[29, 37].Push("LOG");
             values[29, 37].Push("OL");
-            values[29, 36].Push("LOG");
-            values[29, 37].Push("OL");
+
+            values[29, 39].Push("C'");
+            values[29, 39].Push("BOOLEANO");
+            values[29, 39].Push("OL");
+
+            values[29, 47].Push("E");
 
             //Valores para C'
             values[30, 23].Push("!");
@@ -534,6 +551,8 @@ namespace IDEProject
             values[31, 36].Push("COM");
             values[31, 37].Push("X");
             values[31, 37].Push("COM");
+
+            values[31, 47].Push("E");
 
             //Valores para COM
             for(int i=17; i<23; i++)
@@ -553,7 +572,52 @@ namespace IDEProject
             //Valores para OL
             values[34, 2].Push("E");
             values[34, 15].Push("&&");
+            values[34, 15].Push("C");
             values[34, 16].Push("||");
+            values[34, 16].Push("C");
+
+            values[34, 47].Push("E");
+
+            //Valores para M
+            values[35, 44].Push("MIENTRAS");
+            values[35, 44].Push("(");
+            values[35, 44].Push("C");
+            values[35, 44].Push(")");
+            values[35, 44].Push("{");
+            values[35, 44].Push("A");
+            values[35, 44].Push("}");
+
+            //Valores para H
+            values[36, 45].Push("HACER");
+            values[36, 45].Push("{");
+            values[36, 45].Push("A");
+            values[36, 45].Push("}");
+            values[36, 45].Push("MIENTRAS");
+            values[36, 45].Push("(");
+            values[36, 45].Push("C");
+            values[36, 45].Push(")");
+            values[36, 45].Push(";");
+
+            //Valores para F
+            values[37, 46].Push("DESDE");
+            values[37, 46].Push("A'");
+            values[37, 46].Push("HASTA");
+            values[37, 46].Push("C");
+            values[37, 46].Push("INCREMENTO");
+            values[37, 46].Push("ENTERO");
+            values[37, 46].Push("{");
+            values[37, 46].Push("A");
+            values[37, 46].Push("}");
+
+            //Valores para A'
+            values[38, 28].Push("id");
+            values[38, 28].Push("=");
+            values[38, 28].Push("ENTERO");
+
+            values[38, 29].Push("entero");
+            values[38, 29].Push("id");
+            values[38, 29].Push("=");
+            values[38, 29].Push("ENTERO");
         }
 
         //Se inicializan los tokens
