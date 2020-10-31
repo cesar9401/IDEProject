@@ -395,6 +395,7 @@ namespace IDEProject
         private void analizer_Click(object sender, RoutedEventArgs e)
         {
             //Acciones analizar
+            
             autP.StartAnalisis();
             List<String> reports = autP.reports;
             reportText.AppendText("Errores de Compilacion:");

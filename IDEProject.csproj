@@ -58,6 +58,7 @@
     <Compile Include="AutomataPila.cs" />
     <Compile Include="DefGramatica.cs" />
     <Compile Include="Token.cs" />
+    <Compile Include="TreeNode.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
