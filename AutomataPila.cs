@@ -10,7 +10,7 @@ namespace IDEProject
 {
     class AutomataPila
     {
-        private Stack<String> pila;
+        private Stack<TreeNode> pila;
         private Queue<Token> tokens;
         private List<String> terminales;
         private List<String> changes;
@@ -18,22 +18,26 @@ namespace IDEProject
         public List<String> reports;
         private Boolean acept;
         private DefGramatica gramatica;
+        private int actualNode;
+        private List<TreeNode> tree;
 
         //Constructor, construir automata
         public AutomataPila()
         {
+            this.tree = new List<TreeNode>();
+            this.actualNode = 0;
+
             gramatica = new DefGramatica();
             reports = new List<String>();
             this.terminales = gramatica.GetTerminales();
             this.changes = gramatica.GetChanges();
             this.values = gramatica.GetValues();
 
-            pila = new Stack<String>();
-            pila.Push("$");
-            foreach(String t in values[0, 0])
-            {
-                pila.Push(t);
-            }
+            pila = new Stack<TreeNode>();
+            pila.Push(new TreeNode("$", -1));
+            pila.Push(new TreeNode("S", actualNode));
+            tree.Add(new TreeNode(null, "S", actualNode));
+            actualNode++;
             this.acept = true;
         }
 
@@ -44,16 +48,16 @@ namespace IDEProject
             while (pila.Count > 0 && tokens.Count > 0)
             {
                 //Acciones Shift
-                if (terminales.Contains(pila.Peek()))
+                if (terminales.Contains(pila.Peek().data))
                 {
-                    Console.WriteLine("Shift " + pila.Peek());
-                    Shift(pila.Peek(), tokens.Peek());
+                    Console.WriteLine("Shift " + pila.Peek().data);
+                    Shift(pila.Peek().data, tokens.Peek());
                     ShowPila();
                 }
                 else
                 {
                     //Acciones Reduce E
-                    if (pila.Peek().Equals("E"))
+                    if (pila.Peek().data.Equals("E"))
                     {
                         Console.WriteLine("Reduce E");
                         pila.Pop();
@@ -64,18 +68,18 @@ namespace IDEProject
                         // Acciones para Reduce
                         string str = GetString(tokens.Peek());
 
-                        if (str.Equals(pila.Peek()))
+                        if (str.Equals(pila.Peek().data))
                         {
                             //Reduce
-                            Console.WriteLine("Reduce " + pila.Peek());
+                            Console.WriteLine("Reduce " + pila.Peek().data);
                             tokens.Dequeue();
                             pila.Pop();
                             ShowPila();
                         }
                         else
                         {
-                            Console.WriteLine("Se esperaba: " + pila.Peek());
-                            reports.Add("Error Sintactico: Fila: " + tokens.Peek().row + ", Columna: " + tokens.Peek().col + ", se ha encontrado: " + tokens.Peek().type + "(" + tokens.Peek().cadena + "), se esperaba: " + pila.Peek());
+                            Console.WriteLine("Se esperaba: " + pila.Peek().data);
+                            reports.Add("Error Sintactico: Fila: " + tokens.Peek().row + ", Columna: " + tokens.Peek().col + ", se ha encontrado: " + tokens.Peek().type + "(" + tokens.Peek().cadena + "), se esperaba: " + pila.Peek().data);
                             Console.WriteLine("No es posible hacer reduce");
                             ShowNextToken();
                             //Pasar al siguiente token
@@ -112,9 +116,9 @@ namespace IDEProject
         //Mostrar elementos en la pila
         private void ShowPila()
         {
-            foreach(String s in pila)
+            foreach(TreeNode s in pila)
             {
-                Console.Write(s);
+                Console.Write(s.data);
             }
             Console.WriteLine("");
         }
@@ -139,10 +143,19 @@ namespace IDEProject
                 //values[indexT, indexC] != null
                 if(values[indexT, indexC].Count > 0)
                 {
-                    pila.Pop();
+                    TreeNode father = pila.Pop();
+                    Stack<TreeNode> tmp = new Stack<TreeNode>();
+
                     foreach (String t in values[indexT, indexC])
                     {
-                        pila.Push(t);
+                        pila.Push(new TreeNode(t, actualNode));
+                        tmp.Push(new TreeNode(father, t, actualNode));
+                        actualNode++;
+                    }
+
+                    foreach(TreeNode t in tmp)
+                    {
+                        tree.Add(t);
                     }
                 }
                 else
@@ -150,7 +163,7 @@ namespace IDEProject
                     Console.WriteLine("indexT: " + indexT);
                     Console.WriteLine("indexC: " + indexC);
                     
-                    Console.WriteLine("Pop en pila: " + pila.Peek());
+                    Console.WriteLine("Pop en pila: " + pila.Peek().data);
                     pila.Pop();
                     this.acept = false;
                 }
@@ -178,8 +191,11 @@ namespace IDEProject
             }
         }
 
-        //Construccion de automata
-
+        //Metodo get del arbol
+        public List<TreeNode> GetTreeNode()
+        {
+            return this.tree;
+        }
 
         //Se inicializan los tokens
         public void SetTokens(List<Token> tokens)
@@ -193,6 +209,12 @@ namespace IDEProject
                 }
             }
             this.tokens.Enqueue(new Token("$", "$", 0, 0));
+        }
+
+        //Metodo para verificar si el codigo fuente es aceptado
+        public Boolean IsAcept()
+        {
+            return this.acept;
         }
     }
 }

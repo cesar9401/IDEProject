@@ -7,6 +7,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.IO;
+using System.Diagnostics;
 
 namespace IDEProject
 {
@@ -395,7 +396,7 @@ namespace IDEProject
         private void analizer_Click(object sender, RoutedEventArgs e)
         {
             //Acciones analizar
-            
+
             autP.StartAnalisis();
             List<String> reports = autP.reports;
             reportText.AppendText("Errores de Compilacion:");
@@ -403,6 +404,55 @@ namespace IDEProject
             {
                 reportText.AppendText("\n" + t);
             }
+
+            if (autP.IsAcept())
+            {
+                generatorTree.IsEnabled = true;
+            }
+        }
+
+        private void generatorTree_Click(object sender, RoutedEventArgs e)
+        {
+            //Construir archivo
+            List<TreeNode> tree = autP.GetTreeNode();
+            String instructions = "digraph arbolSintactico{\n";
+            foreach (TreeNode t in tree)
+            {
+                instructions += "\tNodo" + t.id + "[label=\"" + t.data + "\"];\n";
+            }
+            foreach (TreeNode t in tree)
+            {
+                if (t.father != null)
+                {
+                    instructions += "\tNodo" + t.father.id + " -> Nodo" + t.id + ";\n";
+                }
+            }
+            instructions += "}";
+            Console.WriteLine(instructions);
+
+            //Guardar archivo
+            try
+            {
+                SaveFileDialog forSave = new SaveFileDialog();
+                forSave.Title = "Guardar Arbol Sintactico";
+                forSave.Filter = "dot files (*.dot)|*.dot";
+                if (forSave.ShowDialog() == true)
+                {
+                    if (forSave.FileName != null)
+                    {
+                        String pathF = forSave.FileName;
+                        StreamWriter save = File.CreateText(pathF);
+                        save.Write(instructions);
+                        save.Flush();
+                        save.Close();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("No se ha podido guardar el archivo");
+            }
+
         }
     }
 }

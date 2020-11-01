@@ -13,17 +13,23 @@ namespace IDEProject
     { 
 
         public String data { get; set; }
-        public int father { get; set; }
         public int id { get; set; }
+        public TreeNode father { get; set; }
 
         public TreeNode()
         {
         }
-        
-        public TreeNode(String data, int father, int id)
+     
+        public TreeNode(String data, int id)
         {
             this.data = data;
+            this.id = id;
+        }
+
+        public TreeNode(TreeNode father, String data, int id)
+        {
             this.father = father;
+            this.data = data;
             this.id = id;
         }
     }
