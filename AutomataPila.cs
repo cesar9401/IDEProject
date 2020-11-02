@@ -155,15 +155,18 @@ namespace IDEProject
 
                     foreach(TreeNode t in tmp)
                     {
-                        tree.Add(t);
+                        if (!t.data.Equals("E"))
+                        {
+                            tree.Add(t);
+                        }
                     }
                 }
                 else
                 {
                     Console.WriteLine("indexT: " + indexT);
                     Console.WriteLine("indexC: " + indexC);
-                    
                     Console.WriteLine("Pop en pila: " + pila.Peek().data);
+                    reports.Add("Error Sintactico: Fila: " + tokens.Peek().row + ", Columna: " + tokens.Peek().col + ", se ha encontrado: " + tokens.Peek().type + "(" + tokens.Peek().cadena + "), no es posible reconocer el token.");
                     pila.Pop();
                     this.acept = false;
                 }
@@ -179,6 +182,7 @@ namespace IDEProject
             }
         }
 
+        //Metodo para escoger el tipo de cadena a retornar
         private String GetString(Token tkn)
         {
             if(tkn.type.Equals("OPERADORES") || tkn.type.Equals("OPERADORES_FS") || tkn.type.Equals("RESERVADO"))
@@ -189,6 +193,62 @@ namespace IDEProject
             {
                 return tkn.type;
             }
+        }
+
+        //Obtener string para generar archivo .dot
+        public String getInstructions()
+        {
+            //Construir archivo
+            String instructions = "digraph arbolSintactico{\n";
+            foreach (TreeNode t in tree)
+            {
+                if (t.data.Equals("id"))
+                {
+                    t.data += getCondition(t);
+                }
+                instructions += "\tNodo" + t.id + "[label=\"" + t.data + "\"];\n";
+            }
+            foreach (TreeNode t in tree)
+            {
+                if (t.father != null)
+                {
+                    instructions += "\tNodo" + t.father.id + " -> Nodo" + t.id + "[arrowhead = none];\n";
+                }
+            }
+            instructions += "}";
+            Console.WriteLine(instructions);
+            return instructions;
+        }
+
+        //Vericar si existe o se establecera el id en la tabla de simbolos
+        public String getCondition(TreeNode t)
+        {
+            List<String> genId = new List<String>()
+            {
+                "B", "EN'", "DEC'", "CAD'", "BOL'", "CAR'", "A'", "B'"
+            };
+
+            List<String> isId = new List<String>()
+            {
+                "N", "W", "R", "B'", "K"
+            };
+
+            if (t.father != null)
+            {
+                if (genId.Contains(t.father.data) && isId.Contains(t.father.data))
+                {
+                    return "(V&A -> ts)";
+                }
+                else if (genId.Contains(t.father.data))
+                {
+                    return "(A -> ts)";
+                }
+                else if (isId.Contains(t.father.data))
+                {
+                    return "(V -> ts)";
+                }
+            }
+            return "";
         }
 
         //Metodo get del arbol

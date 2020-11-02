@@ -304,7 +304,6 @@ namespace IDEProject
 
             values[24, 47].Push("E");
 
-
             //Valores para U
             values[25, 1].Push("N");
             values[25, 9].Push("-");
@@ -356,7 +355,7 @@ namespace IDEProject
             //Valores para C
             values[29, 1].Push("LOG");
             values[29, 1].Push("OL");
-            values[29, 2].Push("E");
+            //values[29, 2].Push("E");
             values[29, 9].Push("LOG");
             values[29, 9].Push("OL");
 

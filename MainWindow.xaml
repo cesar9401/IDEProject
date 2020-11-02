@@ -61,8 +61,7 @@
 
         <Button x:Name="delete" Grid.Column="0" Grid.Row="2" Width="60" Height="60" Content="DEL" HorizontalAlignment="Center" Click="delete_Click" Background="#FF28B463" Foreground="White" FontSize="16" Margin="8,128,7,90" RenderTransformOrigin="0.533,-0.617" Grid.RowSpan="2" />
         <Button x:Name="open" Grid.Column="0" Grid.Row="1" Width="60" Height="60" Content="OPEN" HorizontalAlignment="Center" Click="open_Click" Background="#FF28B463" Foreground="White" FontSize="16" Margin="8,116,7,103" RenderTransformOrigin="0.483,1.367" Grid.RowSpan="2" />
-        <Button x:Name="analizer" Grid.Column="0" Grid.Row="3" Width="60" Height="60" Content="Analizar" HorizontalAlignment="Center" Background="#FF28B463" Foreground="White" FontSize="16" Margin="8,69,7,10" RenderTransformOrigin="0.533,-0.617" Click="analizer_Click" />
-        <Button x:Name="generatorTree" Grid.Column="0" Grid.Row="4" Width="60" Height="60" Content="Ver Arbol" HorizontalAlignment="Center" Background="#FF28B463" Foreground="White" Margin="8,10,7,69" RenderTransformOrigin="0.533,-0.617" Click="generatorTree_Click" IsEnabled="False" />
+        <Button x:Name="generatorTree" Grid.Column="0" Grid.Row="3" Width="60" Height="60" Content="Ver Arbol" HorizontalAlignment="Center" Background="#FF28B463" Foreground="White" Margin="8,69,7,10" RenderTransformOrigin="0.533,-0.617" Click="generatorTree_Click" />
 
     </Grid>
 </Window>

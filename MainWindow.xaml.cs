@@ -192,6 +192,13 @@ namespace IDEProject
 
         private void Compilar_Click(object sender, RoutedEventArgs e)
         {
+            VerificarTokens();
+            AnalizarTokens();
+        }
+
+        //Metodo para verificar el codigo, generar tokens y pintar
+        private void VerificarTokens()
+        {
             String cadena = StringFromRichTextBox();
 
             Automata aut = new Automata();
@@ -205,7 +212,7 @@ namespace IDEProject
 
             consoleText.Document.Blocks.Clear();
 
-            for (int i=0; i<tokens.Count; i++)
+            for (int i = 0; i < tokens.Count; i++)
             {
                 String estado = tokens[i].type;
                 String word = tokens[i].cadena;
@@ -263,6 +270,7 @@ namespace IDEProject
             }
         }
 
+        //Metodo para contar numero de tokens
         private int contarTokens(List<Token> tokens)
         {
             int count = 0;
@@ -393,10 +401,10 @@ namespace IDEProject
             }
         }
 
-        private void analizer_Click(object sender, RoutedEventArgs e)
+        //Metodo para analizar los tokens y verificar si el codigo tiene la estructura definida
+        private void AnalizarTokens()
         {
             //Acciones analizar
-
             autP.StartAnalisis();
             List<String> reports = autP.reports;
             reportText.AppendText("Errores de Compilacion:");
@@ -405,54 +413,50 @@ namespace IDEProject
                 reportText.AppendText("\n" + t);
             }
 
-            if (autP.IsAcept())
+        }
+
+        //Metodo para generar arbol sintactico
+        private void GeneratorTree()
+        {
+            //Obtener string para crear archivo .dot
+            String instructions = "";
+
+            if(autP != null)
             {
-                generatorTree.IsEnabled = true;
+                instructions = autP.getInstructions();
+            }
+
+            if (!instructions.Equals(""))
+            {
+                //Guardar archivo
+                try
+                {
+                    SaveFileDialog forSave = new SaveFileDialog();
+                    forSave.Title = "Guardar Arbol Sintactico";
+                    forSave.Filter = "dot files (*.dot)|*.dot";
+                    if (forSave.ShowDialog() == true)
+                    {
+                        if (forSave.FileName != null)
+                        {
+                            String pathF = forSave.FileName;
+                            StreamWriter save = File.CreateText(pathF);
+                            save.Write(instructions);
+                            save.Flush();
+                            save.Close();
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("No se ha podido guardar el archivo");
+                }
             }
         }
 
+        //Evento apra generar archivo .dot
         private void generatorTree_Click(object sender, RoutedEventArgs e)
         {
-            //Construir archivo
-            List<TreeNode> tree = autP.GetTreeNode();
-            String instructions = "digraph arbolSintactico{\n";
-            foreach (TreeNode t in tree)
-            {
-                instructions += "\tNodo" + t.id + "[label=\"" + t.data + "\"];\n";
-            }
-            foreach (TreeNode t in tree)
-            {
-                if (t.father != null)
-                {
-                    instructions += "\tNodo" + t.father.id + " -> Nodo" + t.id + ";\n";
-                }
-            }
-            instructions += "}";
-            Console.WriteLine(instructions);
-
-            //Guardar archivo
-            try
-            {
-                SaveFileDialog forSave = new SaveFileDialog();
-                forSave.Title = "Guardar Arbol Sintactico";
-                forSave.Filter = "dot files (*.dot)|*.dot";
-                if (forSave.ShowDialog() == true)
-                {
-                    if (forSave.FileName != null)
-                    {
-                        String pathF = forSave.FileName;
-                        StreamWriter save = File.CreateText(pathF);
-                        save.Write(instructions);
-                        save.Flush();
-                        save.Close();
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("No se ha podido guardar el archivo");
-            }
-
+            GeneratorTree();
         }
     }
 }
