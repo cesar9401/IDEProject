@@ -1,20 +1,13 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.IO;
-using System.Data.Common;
+using System.Diagnostics;
 
 namespace IDEProject
 {
@@ -24,6 +17,7 @@ namespace IDEProject
     public partial class MainWindow : Window
     {
         private String path;
+        AutomataPila autP;
 
         public MainWindow()
         {
@@ -198,6 +192,13 @@ namespace IDEProject
 
         private void Compilar_Click(object sender, RoutedEventArgs e)
         {
+            VerificarTokens();
+            AnalizarTokens();
+        }
+
+        //Metodo para verificar el codigo, generar tokens y pintar
+        private void VerificarTokens()
+        {
             String cadena = StringFromRichTextBox();
 
             Automata aut = new Automata();
@@ -205,9 +206,13 @@ namespace IDEProject
             List<Token> tokens = aut.verificarCadena();
             labelCadena.Content = "Tokens: " + contarTokens(tokens);
 
+            //Automata de Pila
+            autP = new AutomataPila();
+            autP.SetTokens(tokens);
+
             consoleText.Document.Blocks.Clear();
 
-            for (int i=0; i<tokens.Count; i++)
+            for (int i = 0; i < tokens.Count; i++)
             {
                 String estado = tokens[i].type;
                 String word = tokens[i].cadena;
@@ -218,19 +223,34 @@ namespace IDEProject
                     case "COMENTARIO":
                         color = Brushes.Red;
                         break;
-                    case "STRING":
+                    case "CADENA":
+                        color = Brushes.Gray;
+                        break;
+                    case "cadena":
                         color = Brushes.Gray;
                         break;
                     case "ENTERO":
                         color = Brushes.Purple;
                         break;
+                    case "entero":
+                        color = Brushes.Purple;
+                        break;
                     case "DECIMAL":
+                        color = Brushes.LightBlue;
+                        break;
+                    case "decimal":
                         color = Brushes.LightBlue;
                         break;
                     case "BOOLEANO":
                         color = Brushes.DarkOrange;
                         break;
-                    case "CHAR":
+                    case "booleano":
+                        color = Brushes.DarkOrange;
+                        break;
+                    case "CARACTER":
+                        color = Brushes.Brown;
+                        break;
+                    case "caracter":
                         color = Brushes.Brown;
                         break;
                     case "RESERVADO":
@@ -250,10 +270,12 @@ namespace IDEProject
             }
         }
 
+        //Metodo para contar numero de tokens
         private int contarTokens(List<Token> tokens)
         {
             int count = 0;
             int errores = 0;
+            String errors = "";
             for (int i = 0; i < tokens.Count; i++)
             {
                 if (!tokens[i].type.Equals("FIN"))
@@ -261,6 +283,7 @@ namespace IDEProject
                     if(tokens[i].type.Equals("NO VALIDO"))
                     {
                         errores++;
+                        errors += "Error Lexico: fila: " + tokens[i].row + ", columna: " + tokens[i].col + ", cadena: " + tokens[i].cadena + "\n";
                     }
                     else
                     {
@@ -272,10 +295,12 @@ namespace IDEProject
             reportText.AppendText(path);
             reportText.AppendText("\nCantidad de errores: " + errores);
             reportText.AppendText("\nCantidad de tokens: " + count);
+            reportText.AppendText("\n" + errors);
 
             return count;
         }
 
+        //Acciones guardar reporte
         private void saveReport_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog forSave = new SaveFileDialog();
@@ -296,6 +321,7 @@ namespace IDEProject
             }
         }
 
+        //Acciones boton eliminar
         private void delete_Click(object sender, RoutedEventArgs e)
         {
             var obj = treeViewDirectory.SelectedItem;
@@ -373,6 +399,64 @@ namespace IDEProject
             {
                 MessageBox.Show("Debe seleccionar un archivo");
             }
+        }
+
+        //Metodo para analizar los tokens y verificar si el codigo tiene la estructura definida
+        private void AnalizarTokens()
+        {
+            //Acciones analizar
+            autP.StartAnalisis();
+            List<String> reports = autP.reports;
+            reportText.AppendText("Errores de Compilacion:");
+            foreach (String t in reports)
+            {
+                reportText.AppendText("\n" + t);
+            }
+
+        }
+
+        //Metodo para generar arbol sintactico
+        private void GeneratorTree()
+        {
+            //Obtener string para crear archivo .dot
+            String instructions = "";
+
+            if(autP != null)
+            {
+                instructions = autP.getInstructions();
+            }
+
+            if (!instructions.Equals(""))
+            {
+                //Guardar archivo
+                try
+                {
+                    SaveFileDialog forSave = new SaveFileDialog();
+                    forSave.Title = "Guardar Arbol Sintactico";
+                    forSave.Filter = "dot files (*.dot)|*.dot";
+                    if (forSave.ShowDialog() == true)
+                    {
+                        if (forSave.FileName != null)
+                        {
+                            String pathF = forSave.FileName;
+                            StreamWriter save = File.CreateText(pathF);
+                            save.Write(instructions);
+                            save.Flush();
+                            save.Close();
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("No se ha podido guardar el archivo");
+                }
+            }
+        }
+
+        //Evento apra generar archivo .dot
+        private void generatorTree_Click(object sender, RoutedEventArgs e)
+        {
+            GeneratorTree();
         }
     }
 }

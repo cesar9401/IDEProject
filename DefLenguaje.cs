@@ -14,6 +14,8 @@ namespace IDEProject
         public String WhatIs(int code)
         {
             this.code = code;
+            //MessageBox.Show("code: " + code);
+
             if (IsNumber())
                 return "N";
             if (IsLetter())
